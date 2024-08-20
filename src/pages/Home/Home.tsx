@@ -54,7 +54,6 @@ function Home() {
       const newProgress = projectSectionRefs.current.map((sectionRef) => {
         if (sectionRef) {
           const sectionTop = sectionRef.getBoundingClientRect().top + scrollTop;
-          const sectionHeight = sectionRef.clientHeight;
           const maxScroll = document.documentElement.scrollHeight - viewportHeight;
 
           if (scrollTop > sectionTop - viewportHeight) {
