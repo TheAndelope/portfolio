@@ -41,28 +41,34 @@ function Home() {
       ref={vantaRef}
     >
       <header className="p-4 z-10" >
-        <nav className="">
-          <ul className="list-none m-0 pt-2 pb-2 pr-2 pl-2 overflow-hidden bg-gray-800">
-            <li className="float-left mr-4 hover:text-green"><a href="#">Home</a></li>
-            <li className="float-left mr-4 hover:text-green"><a href="#">About</a></li>
-            <li className="float-left hover:text-green"><a href="#">Contact</a></li>
+        <nav className="shadow-2xl rounded-lg">
+          <ul className="list-none m-0 p-2 bg-white rounded-2xl overflow-hidden">
+            <li className="float-left mr-4 ml-2">
+              <a href="#" className="text-accent">Home</a>
+            </li>
+            <li className="float-left mr-4">
+              <a href="#" className="text-accent">About</a>
+            </li>
+            <li className="float-left">
+              <a href="#" className="text-accent">Contact</a>
+            </li>
           </ul>
         </nav>
       </header>
       <h1 className="text-center font-franklin font-normal text-title z-10 text-white">Andy Duong</h1>
 
-            <WordRotate
+      <WordRotate
 
-                words={[
-                    "Game Developer",
-                    "Mobile Developer",
-                    "Hackathon Enthusiast",
-                    "Machine Learning Developer",
-                    "Web Developer",
-                    "Builder"
-                ]}
-            />
-      
+        words={[
+          "Game Developer",
+          "Mobile Developer",
+          "Hackathon Enthusiast",
+          "Machine Learning Developer",
+          "Web Developer",
+          "Builder"
+        ]}
+      />
+
     </div>
   );
 }

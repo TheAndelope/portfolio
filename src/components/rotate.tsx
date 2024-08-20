@@ -35,7 +35,7 @@ export default function WordRotate({
 
   return (
     <div className="overflow-hidden">
-      <div className="min-h-[1em]">
+      <div className="min-h-[1em] text-accent">
         {" "}
         {/* Maintain space for the rotating text */}
         <AnimatePresence mode="wait">
