@@ -16,6 +16,7 @@ export default {
         primary: "#343b5c",
         secondary: "#ffffff",
         accent: "#fc1256",
+        skyblue: "#94a6ff"
 
       },
       fontSize: {

@@ -35,11 +35,11 @@ export default function WordRotate({
 
   return (
     <div className="overflow-hidden">
-      <div className="min-h-[1em] text-accent">
+      <div className="min-h-[0.25em] text-accent">
         {" "}
         {/* Maintain space for the rotating text */}
         <AnimatePresence mode="wait">
-          <motion.h1 className="text-center"
+          <motion.h1 className="text-center text-8xl"
             key={words[index]}
             {...framerProps}
           >

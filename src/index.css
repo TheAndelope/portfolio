@@ -11,3 +11,20 @@ h1{
   font-weight: 400;
   font-size: 10rem;
 }
+/* styles.css */
+body {
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+.cloud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/images/cloud.png');
+  background-size: cover;
+  background-position: center;
+  transform: translateX(-100%); /* Start off-screen */
+  transition: transform 0.5s ease-out; /* Smooth transition */
+}
