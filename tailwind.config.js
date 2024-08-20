@@ -6,7 +6,14 @@ export default {
 
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        green: "#107e06"
+      },
+      fontSize: {
+        title: "5rem",
+      },
+    },
   },
   plugins: [],
 }
