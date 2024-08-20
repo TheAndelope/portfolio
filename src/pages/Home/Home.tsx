@@ -98,7 +98,7 @@ function Home() {
             </ul>
           </nav>
         </header>
-        <div className="flex flex-col items-center justify-center h-screen p-4">
+        <div className="flex flex-col items-center justify-center h-screen p-4 -mt-16">
           <h1 className="text-center font-franklin font-normal text-title z-10 text-white">
             Hey! I'm Andy Duong
           </h1>
