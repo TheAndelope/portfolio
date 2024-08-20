@@ -1,7 +1,11 @@
-import React from "react";
-import './Card.css'; // Import custom CSS for aspect ratio
 
-const Card = ({ title, description, imageUrl }) => {
+import './Card.css'; // Import custom CSS for aspect ratio
+interface Card {
+  title: string; 
+  description: string;
+  imageUrl: string; // Explicitly define the type of 'title'
+}
+const Card = ({ title, description, imageUrl }: Card) => {
   return (
     <div className="m-5 max-w-sm rounded overflow-hidden shadow-lg bg-white">
       <div className="aspect-ratio">
