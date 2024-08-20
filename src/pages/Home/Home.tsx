@@ -24,12 +24,13 @@ function Home() {
           minWidth: 200.00,
           scale: 1.00,
           scaleMobile: 1.00,
-          color1: 0xfc1256,
-          color2: 0xffb400,
+          color1: 0xff0000,
+          color2: 0x00d1ff,
           birdSize: 1.50,
           wingSpan: 40.00,
           speedLimit: 10.00,
-          backgroundColor: 0x343b5c
+          backgroundColor: 0x94a6ff,
+          colorMode: "varianceGradient"
         })
       );
     }
@@ -37,39 +38,42 @@ function Home() {
   }, [vantaEffect]);
 
   return (
-    <div
-      ref={vantaRef}
-    >
-      <header className="p-4 z-10" >
-        <nav className="shadow-2xl rounded-lg">
-          <ul className="list-none m-0 p-2 bg-white rounded-2xl overflow-hidden">
-            <li className="float-left mr-4 ml-2">
-              <a href="#" className="text-accent">Home</a>
-            </li>
-            <li className="float-left mr-4">
-              <a href="#" className="text-accent">About</a>
-            </li>
-            <li className="float-left">
-              <a href="#" className="text-accent">Contact</a>
-            </li>
-          </ul>
-        </nav>
-      </header>
-      <h1 className="text-center font-franklin font-normal text-title z-10 text-white">Andy Duong</h1>
+    <>
+      <div
+        ref={vantaRef}
+      >
+        <header className="p-4 z-10" >
+          <nav className="fixed top-0 left-0 m-2 z-10">
+            <ul className="list-none m-0 p-2 bg-white overflow-hidden shadow-custom rounded-2xl flex justify-start items-center">
+              <li className="mr-4 ml-2">
+                <a href="#" className="text-accent">Home</a>
+              </li>
+              <li className="mr-4">
+                <a href="#" className="text-accent">About</a>
+              </li>
+              <li className="mr-4">
+                <a href="#" className="text-accent">Contact</a>
+              </li>
+            </ul>
+          </nav>
+        </header>
+        <h1 className="text-center font-franklin font-normal text-title z-10 text-white">Andy Duong</h1>
 
-      <WordRotate
+        <WordRotate
 
-        words={[
-          "Game Developer",
-          "Mobile Developer",
-          "Hackathon Enthusiast",
-          "Machine Learning Developer",
-          "Web Developer",
-          "Builder"
-        ]}
-      />
+          words={[
+            "Game Developer",
+            "High Schooler",
+            "Mobile Developer",
+            "Hackathon Enthusiast",
+            "Machine Learning Developer",
+            "Web Developer",
+            "Builder"
+          ]}
+        />
 
-    </div>
+      </div>
+    </>
   );
 }
 
