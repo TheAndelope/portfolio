@@ -2,11 +2,17 @@ import { useEffect, useState, useRef } from "react";
 import BIRDS from "vanta/dist/vanta.birds.min";
 import * as THREE from "three";
 import WordRotate from "../../components/rotate";
+
+interface ProjectDetail {
+  title: string;
+  description: string;
+}
+
 function Home() {
-  const [vantaEffect, setVantaEffect] = useState(null);
-  const [scrollProgress, setScrollProgress] = useState([]);
-  const projectSectionRefs = useRef([]);
-  const stickyRef = useRef(null);
+  const [vantaEffect, setVantaEffect] = useState<any>(null);
+  const [scrollProgress, setScrollProgress] = useState<number[]>([]);
+  const projectSectionRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const stickyRef = useRef<HTMLDivElement | null>(null);
 
   // Initialize Vanta effect
   useEffect(() => {
@@ -41,14 +47,14 @@ function Home() {
 
   // Handle scroll to update scroll progress
   useEffect(() => {
-    
     const handleScroll = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       const viewportHeight = window.innerHeight;
 
       const newProgress = projectSectionRefs.current.map((sectionRef) => {
-        if (sectionRef.current) {
-          const sectionTop = sectionRef.current.getBoundingClientRect().top + scrollTop;
+        if (sectionRef) {
+          const sectionTop = sectionRef.getBoundingClientRect().top + scrollTop;
+          const sectionHeight = sectionRef.clientHeight;
           const maxScroll = document.documentElement.scrollHeight - viewportHeight;
 
           if (scrollTop > sectionTop - viewportHeight) {
@@ -68,7 +74,7 @@ function Home() {
     };
   }, []);
 
-  const projectDetails = [
+  const projectDetails: ProjectDetail[] = [
     { title: "IdentiBear", description: "Details for Project 1" },
     { title: "Tutorist", description: "Details for Project 2" },
     { title: "Neo Developer League", description: "Details for Project 3" },
@@ -120,8 +126,11 @@ function Home() {
       {projectDetails.map((project, index) => (
         <section
           key={index}
-          ref={(el) => (projectSectionRefs.current[index] = el)}
-          className="w-full h-[80rem] bg-skyblue py-10 relative"
+          ref={(el) => {
+            // Explicitly cast to HTMLDivElement
+            projectSectionRefs.current[index] = el as HTMLDivElement;
+          }}
+          className="relative w-full h-[80rem] bg-skyblue py-10"
         >
           <h2 className="text-center text-4xl mb-10">{project.title}</h2>
 
@@ -149,18 +158,20 @@ function Home() {
             </div>
           </div>
 
-          <div className="absolute bottom-0 left-0 w-full h-1/2 pointer-events-none">
-            <div
-              className="cloud w-full h-full"
-              style={{
-                transform: `translateX(${scrollProgress[index] * 100}%)`,
-                backgroundImage: "url('/images/cloud.png')",
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                transition: 'transform 0.3s ease-out',
-              }}
-            ></div>
-          </div>
+          {index < projectDetails.length - 1 && (
+            <div className="absolute bottom-0 left-0 w-full h-1/2 pointer-events-none">
+              <div
+                className="cloud w-full h-full"
+                style={{
+                  transform: `translateX(${scrollProgress[index] * 150 - (index * 50)}%)`,
+                  backgroundImage: "url('/images/cloud.png')",
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  transition: 'transform 0.5s ease-out',
+                }}
+              ></div>
+            </div>
+          )}
         </section>
       ))}
     </>
