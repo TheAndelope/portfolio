@@ -13,7 +13,7 @@ interface WordRotateProps {
 
 export default function WordRotate({
   words,
-  duration = 1300, // Shortened duration
+  duration = 3000, // Shortened duration
   framerProps = {
     initial: { opacity: 0, y: -10 }, // Smaller y offset for smoother transition
     animate: { opacity: 1, y: 1 },
@@ -34,8 +34,8 @@ export default function WordRotate({
   }, [words, duration]);
 
   return (
-    <div className="overflow-hidden">
-      <div className="min-h-[0.25em] text-subtitle">
+    <div>
+      <div className="min-h-[0.3em] text-subtitle">
         {" "}
         {/* Maintain space for the rotating text */}
         <AnimatePresence mode="wait">
