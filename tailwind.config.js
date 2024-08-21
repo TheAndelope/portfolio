@@ -15,9 +15,9 @@ export default {
         green: "#107e06",
         primary: "#343b5c",
         secondary: "#ffffff",
-        accent: "#fc1256",
+        accent: "#f9ef80",
         skyblue: "#7b8cff",
-        subtitle: "#b00000"
+        subtitle: "#c6a12a"
 
       },
       fontSize: {

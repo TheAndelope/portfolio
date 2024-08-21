@@ -93,13 +93,13 @@ function Home() {
           <nav className="fixed top-0 left-0 m-2 z-10">
             <ul className="list-none m-0 p-2 bg-white overflow-hidden shadow-custom rounded-2xl flex justify-start items-center">
               <li className="mr-4 ml-2">
-                <a href="Home" className="text-accent">Home</a>
+                <a href="Home" className="text-subtitle">Home</a>
               </li>
               <li className="mr-4">
-                <a href="#" className="text-accent">About</a>
+                <a href="#" className="text-subtitle">About</a>
               </li>
               <li className="mr-4">
-                <a href="#" className="text-accent">Contact</a>
+                <a href="#" className="text-subtitle">Contact</a>
               </li>
             </ul>
           </nav>
@@ -162,7 +162,7 @@ function Home() {
 
                   </div>
                   <div className="flex">
-                    <p className="mt-4 mx-auto text-center text-accent font-bold">{project.sum}</p>
+                    <p className="mt-4 mx-auto text-center text-white font-bold">{project.sum}</p>
                   </div>
                   <div className="px-6 pt-4 pb-2">
                     {project.tags?.map((str, index) => (
