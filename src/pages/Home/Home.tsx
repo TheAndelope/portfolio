@@ -87,7 +87,7 @@ function Home() {
           <nav className="fixed top-0 left-0 m-2 z-10">
             <ul className="list-none m-0 p-2 bg-white overflow-hidden shadow-custom rounded-2xl flex justify-start items-center">
               <li className="mr-4 ml-2">
-                <a href="home" className="text-accent">Home</a>
+                <a href="Home" className="text-accent">Home</a>
               </li>
               <li className="mr-4">
                 <a href="#" className="text-accent">About</a>
