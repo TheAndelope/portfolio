@@ -111,6 +111,7 @@ function Home() {
               "High Schooler",
               "Mobile Developer",
               "Hackathon Enthusiast",
+              "Horror Aficionado",
               "ML Developer",
               "Competitive Programmer",
               "Web Developer",
