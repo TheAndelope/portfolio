@@ -77,6 +77,7 @@ function Home() {
     { title: "IdentiBear", description: "Details for Project 1" },
     { title: "Tutorist", description: "Details for Project 2" },
     { title: "Neo Developer League", description: "Details for Project 3" },
+    { title: "Itch", description: "Details for Project 4" }
   ];
 
   return (
@@ -86,7 +87,7 @@ function Home() {
           <nav className="fixed top-0 left-0 m-2 z-10">
             <ul className="list-none m-0 p-2 bg-white overflow-hidden shadow-custom rounded-2xl flex justify-start items-center">
               <li className="mr-4 ml-2">
-                <a href="#" className="text-accent">Home</a>
+                <a href="home" className="text-accent">Home</a>
               </li>
               <li className="mr-4">
                 <a href="#" className="text-accent">About</a>
@@ -111,8 +112,10 @@ function Home() {
               "Mobile Developer",
               "Hackathon Enthusiast",
               "ML Developer",
+              "Competitive Programmer",
               "Web Developer",
               "Engineering Enthusiast",
+              "Stargazer",
             ]}
           />
         </div>
@@ -126,7 +129,6 @@ function Home() {
         <section
           key={index}
           ref={(el) => {
-            // Explicitly cast to HTMLDivElement
             projectSectionRefs.current[index] = el as HTMLDivElement;
           }}
           className="relative w-full h-[80rem] bg-skyblue py-10"
@@ -135,8 +137,8 @@ function Home() {
 
           <div className="relative h-full">
             <div className="sticky top-0 w-full bg-skyblue p-10" ref={stickyRef}>
-              <div className="project-container flex flex-col items-center">
-                <div className="project-card bg-white p-6 rounded-lg shadow-lg w-2/5 mb-10">
+              <div className="project-container flex flex-col md:flex-row items-start justify-between">
+                <div className="project-card bg-white p-6 rounded-lg shadow-custom w-full md:w-2/5 mb-10 backdrop-blur-lg bg-white bg-opacity-10 border border-opacity-30 border-white rounded-lg">
                   <img
                     src="/path-to-image.jpg"
                     alt="Project"
@@ -149,7 +151,7 @@ function Home() {
                   <p className="mt-4">Brief description of the project.</p>
                 </div>
 
-                <div className="project-details w-2/5 mb-10">
+                <div className="project-details w-full md:w-2/5 mb-10">
                   <h3 className="text-3xl mb-4">{project.title}</h3>
                   <p>{project.description}</p>
                 </div>
@@ -162,17 +164,19 @@ function Home() {
               <div
                 className="cloud w-full h-full"
                 style={{
-                  transform: `translateX(${scrollProgress[index] * 150 - (index * 50)}%)`,
+                  transform: `translateX(${scrollProgress[index] * 150 - (index * 20)}%)`,
                   backgroundImage: "url('/images/cloud.png')",
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
-                  transition: 'transform 0.5s ease-out',
+                  transition: 'transform 0.5s linear',
                 }}
               ></div>
             </div>
           )}
         </section>
       ))}
+      <footer className="bg-skyblue">
+      </footer>
     </>
   );
 }
