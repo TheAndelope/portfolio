@@ -134,7 +134,6 @@ function Home() {
           }}
           className="relative w-full h-[80rem] bg-skyblue py-10"
         >
-          <h2 className="text-center text-4xl mb-10">{project.title}</h2>
 
           <div className="relative h-full">
             <div className="sticky top-0 w-full bg-skyblue p-10" ref={stickyRef}>
