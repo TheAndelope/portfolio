@@ -13,7 +13,7 @@ interface WordRotateProps {
 
 export default function WordRotate({
   words,
-  duration = 3000, // Shortened duration
+  duration = 2250, // Shortened duration
   framerProps = {
     initial: { opacity: 0, y: -10 }, // Smaller y offset for smoother transition
     animate: { opacity: 1, y: 1 },

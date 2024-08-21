@@ -162,7 +162,7 @@ function Home() {
 
                   </div>
                   <div className="flex">
-                    <p className="mt-4 mx-auto text-center text-white font-bold">{project.sum}</p>
+                    <p className="mt-4 mx-auto text-center text-white text-xl font-semibold">{project.sum}</p>
                   </div>
                   <div className="px-6 pt-4 pb-2">
                     {project.tags?.map((str, index) => (
@@ -172,17 +172,17 @@ function Home() {
                   </div>
                   <div className="flex justify-center space-x-4 mt-4">
                     {project.links?.github && (
-                      <a href={project.links.github} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-gray-800">
+                      <a href={project.links.github} target="_blank" rel="noopener noreferrer" className="text-black hover:text-secondary">
                         <FaGithub size={24} />
                       </a>
                     )}
                     {project.links?.devpost && (
-                      <a href={project.links.devpost} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-gray-800">
+                      <a href={project.links.devpost} target="_blank" rel="noopener noreferrer" className="text-black hover:text-secondary">
                         <FaDev size={24} />
                       </a>
                     )}
                     {project.links?.itch && (
-                      <a href={project.links.itch} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-gray-800">
+                      <a href={project.links.itch} target="_blank" rel="noopener noreferrer" className="text-black hover:text-secondary">
                         <FaItchIo size={24} />
                       </a>
                     )}
