@@ -39,7 +39,7 @@ export default function WordRotate({
         {" "}
         {/* Maintain space for the rotating text */}
         <AnimatePresence mode="wait">
-          <motion.h1 className="text-center font-sans font-bold text-5xl sm:text-5xl md:text-8xl lg:text-8xl"
+          <motion.h1 className="text-center font-sans font-bold text-5xl sm:text-5xl md:text-8xl lg:text-8xl xl:text-9xl"
             key={words[index]}
             {...framerProps}
           >
