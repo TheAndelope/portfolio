@@ -89,136 +89,125 @@ function Home() {
   ];
 
   return (
-    <>
-      <div id="vanta-bg" className="h-[40rem]">
-        <header className="p-4 z-10">
-          <nav className="fixed top-0 left-0 m-2 z-10">
-            <ul className="list-none m-0 p-2 bg-white overflow-hidden shadow-custom rounded-2xl flex justify-start items-center">
-              <li className="mr-4 ml-2">
-                <a href="Home" className="text-subtitle hover:text-accent">Home</a>
-              </li>
-              <li className="mr-4">
-                <a href="#" className="text-subtitle hover:text-accent">About</a>
-              </li>
-              <li className="mr-4">
-                <a href="#" className="text-subtitle hover:text-accent">Contact</a>
-              </li>
-            </ul>
-          </nav>
-        </header>
-        <div className="flex flex-col items-center justify-center h-screen p-4 -mt-16">
-          <h1 className="text-center font-normal text-title z-10 text-white">
-            Hey! I'm Andy Duong
-          </h1>
-          <h1 className="text-xl text-center font-normal text-title z-10 text-white">
-            and I'm a
-          </h1>
-          <WordRotate
-            words={[
-              "Game Developer",
-              "High Schooler",
-              "Mobile Developer",
-              "Hackathon Enthusiast",
-              "Horror Aficionado",
-              "ML Developer",
-              "Competitive Programmer",
-              "Web Developer",
-              "Engineering Enthusiast",
-              "Stargazer",
-            ]}
-          />
-        </div>
-      </div>
+<>
+  <div id="vanta-bg" className="h-[40rem]">
+    <header className="p-4 z-10">
+      <nav className="fixed top-0 left-0 m-2 z-10">
+        <ul className="list-none m-0 p-2 bg-white overflow-hidden shadow-custom rounded-2xl flex justify-start items-center">
+          <li className="mr-4 ml-2">
+            <a href="Home" className="text-subtitle hover:text-accent">Home</a>
+          </li>
+          <li className="mr-4">
+            <a href="#" className="text-subtitle hover:text-accent">About</a>
+          </li>
+          <li className="mr-4">
+            <a href="#" className="text-subtitle hover:text-accent">Contact</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <div className="flex flex-col items-center justify-center h-screen p-4 -mt-16 font-sans">
+      <h1 className="text-center font-sans font-bold text-title z-10 text-white">
+        Hey! I'm Andy Duong
+      </h1>
+      <h1 className="text-xl text-center font-sans font-bold text-title z-10 text-white">
+        and I'm a
+      </h1>
+      <WordRotate
+        words={[
+          "Game Developer",
+          "High Schooler",
+          "Mobile Developer",
+          "Hackathon Enthusiast",
+          "Horror Aficionado",
+          "ML Developer",
+          "Competitive Programmer",
+          "Web Developer",
+          "Engineering Enthusiast",
+          "Stargazer",
+        ]}
+      />
+    </div>
+  </div>
 
-      <section>
-        <h1 className="bg-skyblue p-2 pt-10 text-center text-3xl md:text-4xl lg:text-5xl text-accent">Projects</h1>
-      </section>
+  <section className="font-sans">
+    <h1 className="bg-skyblue p-2 pt-10 font-sans font-bold text-center text-3xl md:text-4xl lg:text-5xl text-accent">Projects</h1>
+  </section>
 
-      {projectDetails.map((project, index) => (
-        <section
-          key={index}
-          ref={(el) => {
-            projectSectionRefs.current[index] = el as HTMLDivElement;
-          }}
-          className="relative w-full h-[80rem] bg-skyblue py-10"
-        >
-
-          <div className="relative h-full">
-            <div className="sticky top-0 w-full bg-skyblue p-4 md:p-8 lg:p-10" ref={stickyRef}>
-              <div className="project-container flex flex-col md:flex-row items-start justify-between">
-                <div className="project-card bg-white p-4 md:p-6 lg:p-8 rounded-lg shadow-custom w-full md:w-2/5 mb-10 backdrop-blur-lg bg-white bg-opacity-10 border border-opacity-30 border-white rounded-lg">
-                  <h2 className="text-4xl md:text-4xl lg:text-5xl text-center pb-5 text-secondary">{project.title}</h2>
-                  <div className="project-links flex justify-center md:justify-between">
-                    <div className="video-container mx-auto h-[15rem] w-4/5">
-                      <iframe
-                        className="w-full h-full"
-                        src={"https://www.youtube.com/embed/" + project.demo}
-                        title="YouTube video player"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                      ></iframe>
-                    </div>
-                  </div>
-                  <div className="flex">
-                    <p className="mt-4 mx-auto text-center text-white text-lg md:text-xl font-semibold">{project.sum}</p>
-                  </div>
-                  <div className="px-4 md:px-6 pt-4 pb-2">
-                    {project.tags?.map((str, index) => (
-                      <span key={index} className="inline-block bg-gray-200 rounded-full px-2 py-1 text-xs md:text-sm font-semibold text-gray-700 mr-2 mb-2">#{str}</span>
-                    ))}
-                  </div>
-                  <div className="flex justify-center space-x-4 mt-4">
-                    {project.links?.github && (
-                      <a href={project.links.github} target="_blank" rel="noopener noreferrer" className="text-black hover:text-secondary">
-                        <FaGithub size={24} />
-                      </a>
-                    )}
-                    {project.links?.devpost && (
-                      <a href={project.links.devpost} target="_blank" rel="noopener noreferrer" className="text-black hover:text-secondary">
-                        <FaDev size={24} />
-                      </a>
-                    )}
-                    {project.links?.itch && (
-                      <a href={project.links.itch} target="_blank" rel="noopener noreferrer" className="text-black hover:text-secondary">
-                        <FaItchIo size={24} />
-                      </a>
-                    )}
-                  </div>
-                </div>
-
-                <div className="project-details w-full sm:w-full md:w-1/2 lg:w-1/2 mb-10 text-xl mx-auto lg:mx-0">
-                  <p className="text-secondary text-center 
-                    text-base sm:text-base md:text-lg lg:text-xl 
-                    sm:mx-auto md:mx-auto lg:mx-0 
-                    sm:my-auto md:my-auto lg:my-0">
-                    {project.description}
-                  </p>
+  {projectDetails.map((project, index) => (
+    <section
+      key={index}
+      ref={(el) => {
+        projectSectionRefs.current[index] = el as HTMLDivElement;
+      }}
+      className="relative w-full h-[80rem] bg-skyblue py-10 font-sans"
+    >
+      <div className="relative h-full">
+        <div className="sticky top-0 w-full bg-skyblue p-4 md:p-8 lg:p-10" ref={stickyRef}>
+          <div className="project-container flex flex-col md:flex-row items-start justify-between">
+            <div className="project-card bg-white p-4 md:p-6 lg:p-8 rounded-lg shadow-custom w-full md:w-2/5 mb-10 backdrop-blur-lg bg-white bg-opacity-10 border border-opacity-30 border-white rounded-lg">
+              <h2 className="text-4xl md:text-4xl lg:text-5xl font-sans font-bold text-center pb-5 text-secondary">
+                {project.title}
+              </h2>
+              <div className="project-links flex justify-center md:justify-between">
+                <div className="video-container mx-auto h-[15rem] w-4/5">
+                  <iframe
+                    className="w-full h-full"
+                    src={"https://www.youtube.com/embed/" + project.demo}
+                    title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
                 </div>
               </div>
+              <div className="flex">
+                <p className="mt-4 mx-auto font-sans font-bold text-center text-white text-lg md:text-xl font-semibold">
+                  {project.sum}
+                </p>
+              </div>
+              <div className="px-4 md:px-6 pt-4 pb-2">
+                {project.tags?.map((str, index) => (
+                  <span key={index} className="inline-block bg-gray-200 rounded-full px-2 py-1 text-xs md:text-sm font-semibold text-gray-700 mr-2 mb-2">
+                    #{str}
+                  </span>
+                ))}
+              </div>
+              <div className="flex justify-center space-x-4 mt-4">
+                {project.links?.github && (
+                  <a href={project.links.github} target="_blank" rel="noopener noreferrer" className="text-black hover:text-secondary">
+                    <FaGithub size={24} />
+                  </a>
+                )}
+                {project.links?.devpost && (
+                  <a href={project.links.devpost} target="_blank" rel="noopener noreferrer" className="text-black hover:text-secondary">
+                    <FaDev size={24} />
+                  </a>
+                )}
+                {project.links?.itch && (
+                  <a href={project.links.itch} target="_blank" rel="noopener noreferrer" className="text-black hover:text-secondary">
+                    <FaItchIo size={24} />
+                  </a>
+                )}
+              </div>
+            </div>
+
+            <div className="project-details w-full sm:w-full md:w-1/2 lg:w-1/2 mb-10 text-xl mx-auto lg:mx-0">
+              <p className="text-secondary text-center 
+                font-sans font-bold text-base sm:text-base md:text-lg lg:text-xl 
+                sm:mx-auto md:mx-auto lg:mx-0 
+                sm:my-auto md:my-auto lg:my-0">
+                {project.description}
+              </p>
             </div>
           </div>
-           {/*           
-          {index < projectDetails.length - 1 && (
-            <div className="absolute bottom-0 left-0 w-full h-1/2 pointer-events-none">
-              <div
-                className="cloud w-full h-full"
-                style={{
-                  transform: `translateX(${scrollProgress[index] * 150 - (index * 20)}%)`,
-                  backgroundImage: "url('/images/cloud.png')",
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  transition: 'transform 0.5s linear',
-                }}
-              ></div>
-            </div>
-          )}
-          */
-          }
-        </section>
-      ))}
-      <footer className="bg-skyblue">
-      </footer>
-    </>
+        </div>
+      </div>
+    </section>
+  ))}
+  <footer className="bg-skyblue font-sans">
+  </footer>
+</>
+
   );
 }
 
