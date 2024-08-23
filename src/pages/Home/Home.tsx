@@ -16,7 +16,7 @@ interface ProjectDetail {
 
 function Home() {
   const [vantaEffect, setVantaEffect] = useState<any>(null);
-  const [scrollProgress, setScrollProgress] = useState<number[]>([]);
+  //const [scrollProgress, setScrollProgress] = useState<number[]>([]);
   const projectSectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const stickyRef = useRef<HTMLDivElement | null>(null);
 
@@ -53,6 +53,7 @@ function Home() {
 
   // Handle scroll to update scroll progress
   useEffect(() => {
+    /*
     const handleScroll = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       const viewportHeight = window.innerHeight;
@@ -71,12 +72,13 @@ function Home() {
       });
 
       setScrollProgress(newProgress);
+      
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
-    };
+    }; */
   }, []);
 
   const projectDetails: ProjectDetail[] = [
