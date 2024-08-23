@@ -107,7 +107,7 @@ function Home() {
       </nav>
     </header>
     <div className="flex flex-col items-center justify-center h-screen p-4 -mt-16 font-sans">
-      <h1 className="text-center font-sans font-bold text-title z-10 text-white">
+      <h1 className="text-center text-5xl sm:text-5xl md:text-8xl lg:text-8xl font-sans font-bold text-title z-10 text-white">
         Hey! I'm Andy Duong
       </h1>
       <h1 className="text-xl text-center font-sans font-bold text-title z-10 text-white">
@@ -193,7 +193,7 @@ function Home() {
 
             <div className="project-details w-full sm:w-full md:w-1/2 lg:w-1/2 mb-10 text-xl mx-auto lg:mx-0">
               <p className="text-secondary text-center 
-                font-sans font-bold text-base sm:text-base md:text-lg lg:text-xl 
+                font-sans font-bold text-sm sm:text-sm md:text-lg lg:text-xl 
                 sm:mx-auto md:mx-auto lg:mx-0 
                 sm:my-auto md:my-auto lg:my-0">
                 {project.description}
