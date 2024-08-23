@@ -11,6 +11,9 @@ h1{
   font-weight: 400;
   font-size: 10rem;
 }
+p{
+  font-family:'Franklin Gothic Medium';
+}
 /* styles.css */
 body {
   overflow-x: hidden; /* Prevent horizontal scrolling */
