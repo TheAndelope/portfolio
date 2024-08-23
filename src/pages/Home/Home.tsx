@@ -184,15 +184,20 @@ function Home() {
                   </div>
                 </div>
 
-                <div className="project-details w-1/2 sd:4/5 md:2/5 mb-10 text-xl mx-auto lg:mx-0" >
-                  <p className="text-secondary text-center">{project.description}</p>
+                <div className="project-details w-full sm:w-full md:w-1/2 lg:w-1/2 mb-10 text-xl mx-auto lg:mx-0">
+                  <p className="text-secondary text-center 
+                    text-base sm:text-base md:text-lg lg:text-xl 
+                    sm:mx-auto md:mx-auto lg:mx-0 
+                    sm:my-auto md:my-auto lg:my-0">
+                    {project.description}
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-
+           {/*           
           {index < projectDetails.length - 1 && (
-            <div className="absolute bottom-0 left-0 w-full h-1/2 sd:4/5 pointer-events-none">
+            <div className="absolute bottom-0 left-0 w-full h-1/2 pointer-events-none">
               <div
                 className="cloud w-full h-full"
                 style={{
@@ -205,6 +210,8 @@ function Home() {
               ></div>
             </div>
           )}
+          */
+          }
         </section>
       ))}
       <footer className="bg-skyblue">
