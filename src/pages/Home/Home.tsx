@@ -107,7 +107,7 @@ function Home() {
           </nav>
         </header>
         <div className="flex flex-col items-center justify-center h-screen p-4 -mt-16 font-sans">
-          <h1 className="text-center text-5xl sm:text-5xl md:text-8xl lg:text-8xl xl:text-9xl font-sans font-bold text-title z-10 text-white">
+          <h1 className="text-center text-5xl sm:text-5xl md:text-8xl lg:text-8xl font-sans font-bold text-title z-10 text-white">
             Hey! I'm Andy Duong
           </h1>
           <h1 className="text-xl xl:text-3xl text-center font-sans font-bold text-title z-10 text-white mb-7 sm:mb-7 md:mb-14 lg:mb-7">
@@ -148,7 +148,7 @@ function Home() {
             <div className="sticky top-0 w-full bg-skyblue p-4 md:p-8 lg:p-10" ref={stickyRef}>
               <div className="project-container flex flex-col md:flex-row items-start justify-between">
                 <div className="project-card bg-white p-4 md:p-6 lg:p-8 rounded-lg shadow-custom w-full md:w-2/5 mb-10 backdrop-blur-lg bg-white bg-opacity-10 border border-opacity-30 border-white rounded-lg">
-                  <h2 className="text-4xl md:text-4xl lg:text-5xl xl:text-7xl font-sans font-bold text-center pb-5 text-secondary">
+                  <h2 className="text-4xl md:text-4xl lg:text-5xl xl:text-6xl font-sans font-bold text-center pb-5 text-secondary">
                     {project.title}
                   </h2>
                   <div className="project-links flex justify-center md:justify-between">
@@ -163,13 +163,13 @@ function Home() {
                     </div>
                   </div>
                   <div className="flex">
-                    <p className="mt-4 mx-auto font-sans font-bold text-center text-white text-lg md:text-xl lg:text-xl xl:text-2xl font-semibold">
+                    <p className="mt-4 mx-auto font-sans font-bold text-center text-white text-lg md:text-xl lg:text-xlfont-semibold">
                       {project.sum}
                     </p>
                   </div>
                   <div className="px-4 md:px-6 pt-4 pb-2">
                     {project.tags?.map((str, index) => (
-                      <span key={index} className="inline-block bg-gray-200 rounded-full px-2 py-1 text-xs md:text-sm xl:text-base font-semibold text-gray-700 mr-2 mb-2">
+                      <span key={index} className="inline-block bg-gray-200 rounded-full px-2 py-1 text-xs md:text-sm font-semibold text-gray-700 mr-2 mb-2">
                         #{str}
                       </span>
                     ))}
@@ -177,17 +177,17 @@ function Home() {
                   <div className="flex justify-center space-x-4 mt-4">
                     {project.links?.github && (
                       <a href={project.links.github} target="_blank" rel="noopener noreferrer" className="text-black hover:text-secondary">
-                        <FaGithub size={36} />
+                        <FaGithub size={24} />
                       </a>
                     )}
                     {project.links?.devpost && (
                       <a href={project.links.devpost} target="_blank" rel="noopener noreferrer" className="text-black hover:text-secondary">
-                        <FaDev size={36} />
+                        <FaDev size={24} />
                       </a>
                     )}
                     {project.links?.itch && (
                       <a href={project.links.itch} target="_blank" rel="noopener noreferrer" className="text-black hover:text-secondary">
-                        <FaItchIo size={36} />
+                        <FaItchIo size={24} />
                       </a>
                     )}
                   </div>
@@ -195,7 +195,7 @@ function Home() {
 
                 <div className="project-details w-full sm:w-full md:w-1/2 lg:w-1/2 mb-10 text-xl mx-auto lg:mx-0">
                   <p className="text-secondary text-center 
-                font-sans font-bold text-sm sm:text-sm md:text-lg lg:text-xl xl:text-2xl 
+                font-sans font-bold text-sm sm:text-sm md:text-lg lg:text-xl 
                 sm:mx-auto md:mx-auto lg:mx-0 
                 sm:my-auto md:my-auto lg:my-0">
                     {project.description}
