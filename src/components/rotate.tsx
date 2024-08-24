@@ -3,6 +3,7 @@
 
 import { AnimatePresence, HTMLMotionProps, motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import '../index.css'
 
 interface WordRotateProps {
   words: string[];
@@ -35,11 +36,11 @@ export default function WordRotate({
 
   return (
     <div>
-      <div className="min-h-[0.3em] text-accent">
+      <div className="min-h-[0.3em] text-secondary">
         {" "}
         {/* Maintain space for the rotating text */}
         <AnimatePresence mode="wait">
-          <motion.h1 className="text-center font-sans font-bold text-5xl sm:text-5xl md:text-8xl lg:text-8xl"
+          <motion.h1 className="text-center textShadow font-sans font-bold text-5xl sm:text-5xl md:text-8xl lg:text-8xl"
             key={words[index]}
             {...framerProps}
           >

@@ -3,7 +3,7 @@ import BIRDS from "vanta/dist/vanta.birds.min";
 import * as THREE from "three";
 import WordRotate from "../../components/rotate";
 import { FaGithub, FaDev, FaItchIo } from 'react-icons/fa';
-
+import '../../index.css'
 interface ProjectDetail {
   title: string;
   description: string;
@@ -34,12 +34,13 @@ function Home() {
           minWidth: 200.0,
           scale: 1.0,
           scaleMobile: 1.0,
-          color1: 0xff0000,
-          color2: 0x00d1ff,
+          color1: 0xd4af37,
+          color2: 0x8c7853,
+          quantity: 4,
           birdSize: 1.5,
           wingSpan: 40.0,
           speedLimit: 10.0,
-          backgroundColor: 0x7b8cff,
+          backgroundColor: 0x000A1D,
           colorMode: "varianceGradient",
         })
       );
@@ -91,29 +92,30 @@ function Home() {
   return (
     <>
       <div id="vanta-bg" className="h-[40rem]">
-        <header className="p-4 z-10">
-          <nav className="fixed top-0 left-0 m-2 z-10">
-            <ul className="list-none m-0 p-2 bg-white overflow-hidden shadow-custom rounded-2xl flex justify-start items-center">
-              <li className="mr-4 ml-2">
-                <a href="Home" className="text-subtitle hover:text-accent">Home</a>
-              </li>
-              <li className="mr-4">
-                <a href="#" className="text-subtitle hover:text-accent">About</a>
-              </li>
-              <li className="mr-4">
-                <a href="#" className="text-subtitle hover:text-accent">Contact</a>
-              </li>
-            </ul>
-          </nav>
+      <header className="relative p-4 z-10 bg-cover bg-center bg-no-repeat"
+                style={{ backgroundImage: 'url(/public/images/sta))' }}>
+            <nav className="fixed top-0 left-0 m-2 z-20">
+                <ul className="list-none shadow-softglow m-0 p-2 bg-accent overflow-hidden shadow-custom rounded-2xl flex justify-start items-center">
+                    <li className="mr-4 ml-2">
+                        <a href="Home" className="text-secondary hover:text-primary">Home</a>
+                    </li>
+                    <li className="mr-4">
+                        <a href="#" className="text-secondary hover:text-primary">About</a>
+                    </li>
+                    <li className="mr-4">
+                        <a href="#" className="text-secondary hover:text-primary">Contact</a>
+                    </li>
+                </ul>
+            </nav>
         </header>
         <div className="flex flex-col items-center justify-center h-screen p-4 -mt-16 font-sans">
-          <h1 className="text-center text-5xl sm:text-5xl md:text-8xl lg:text-8xl font-sans font-bold text-title z-10 text-white">
+          <h1 className="textShadow text-center text-5xl sm:text-5xl md:text-8xl lg:text-8xl font-sans font-bold text-title z-10 text-text">
             Hey! I'm Andy Duong
           </h1>
-          <h1 className="text-xl xl:text-3xl text-center font-sans font-bold text-title z-10 text-white mb-7 sm:mb-7 md:mb-14 lg:mb-7">
+          <h1 className="textShadow text-xl xl:text-3xl text-center font-sans font-bold text-title z-10 text-text mt-3 mb-7 sm:mb-7 md:mb-14 lg:mb-7">
             and I'm a
           </h1>
-          <div className="relative text-xl md:text-2xl lg:text-3xl h-10 md:h-12 lg:h-14 flex items-center justify-center">
+          <div className="relative text-shadow text-xl md:text-2xl lg:text-3xl h-10 md:h-12 lg:h-14 flex items-center justify-center">
             <WordRotate
               words={[
                 "Game Developer",
@@ -133,7 +135,7 @@ function Home() {
       </div>
 
       <section className="font-sans">
-        <h1 className="bg-skyblue p-2 pt-10 font-sans font-bold text-center text-3xl md:text-4xl lg:text-5xl text-accent">Projects</h1>
+        <h1 className="bg-primary p-2 pt-10 font-sans font-bold text-center text-3xl md:text-4xl lg:text-5xl text-secondary">Projects</h1>
       </section>
 
       {projectDetails.map((project, index) => (
@@ -142,13 +144,13 @@ function Home() {
           ref={(el) => {
             projectSectionRefs.current[index] = el as HTMLDivElement;
           }}
-          className="relative w-full h-[80rem] bg-skyblue py-10 font-sans"
+          className="relative w-full h-[80rem] bg-primary py-10 font-sans"
         >
           <div className="relative h-full">
-            <div className="sticky top-0 w-full bg-skyblue p-4 md:p-8 lg:p-10" ref={stickyRef}>
+            <div className="sticky top-0 w-full bg-primary p-4 md:p-8 lg:p-10" ref={stickyRef}>
               <div className="project-container flex flex-col md:flex-row items-start justify-between">
-                <div className="project-card bg-white p-4 md:p-6 lg:p-8 rounded-lg shadow-custom w-full md:w-2/5 mb-10 backdrop-blur-lg bg-white bg-opacity-10 border border-opacity-30 border-white rounded-lg">
-                  <h2 className="text-4xl md:text-4xl lg:text-5xl xl:text-6xl font-sans font-bold text-center pb-5 text-secondary">
+                <div className="project-card relative bg-accent p-4 md:p-6 lg:p-8 rounded-lg shadow-glow w-full md:w-2/5 mb-10 backdrop-blur-lg rounded-lg">
+                  <h2 className="textShadow text-4xl md:text-4xl lg:text-5xl xl:text-6xl font-sans font-bold text-center pb-5 text-secondary">
                     {project.title}
                   </h2>
                   <div className="project-links flex justify-center md:justify-between">
@@ -163,13 +165,13 @@ function Home() {
                     </div>
                   </div>
                   <div className="flex">
-                    <p className="mt-4 mx-auto font-sans font-bold text-center text-white text-lg md:text-xl lg:text-xlfont-semibold">
+                    <p className="mt-4 mx-auto font-sans font-bold text-center text-text text-lg md:text-xl lg:text-xl font-semibold">
                       {project.sum}
                     </p>
                   </div>
                   <div className="px-4 md:px-6 pt-4 pb-2">
                     {project.tags?.map((str, index) => (
-                      <span key={index} className="inline-block bg-gray-200 rounded-full px-2 py-1 text-xs md:text-sm font-semibold text-gray-700 mr-2 mb-2">
+                      <span key={index} className="inline-block bg-gray-200 rounded-full px-2 py-1 text-xs md:text-sm font-semibold text-accent mr-2 mb-2">
                         #{str}
                       </span>
                     ))}
@@ -192,9 +194,8 @@ function Home() {
                     )}
                   </div>
                 </div>
-
                 <div className="project-details w-full sm:w-full md:w-1/2 lg:w-1/2 mb-10 text-xl mx-auto lg:mx-0">
-                  <p className="text-secondary text-center 
+                  <p className="text-text text-center 
                 font-sans font-bold text-sm sm:text-sm md:text-lg lg:text-xl 
                 sm:mx-auto md:mx-auto lg:mx-0 
                 sm:my-auto md:my-auto lg:my-0">
@@ -206,7 +207,7 @@ function Home() {
           </div>
         </section>
       ))}
-      <footer className="bg-skyblue font-sans">
+      <footer className="bg-primary font-sans">
       </footer>
     </>
 

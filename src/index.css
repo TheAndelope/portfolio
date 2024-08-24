@@ -15,7 +15,7 @@ h1{
 p{
   font-family:'Franklin Gothic Medium';
 }
-/* styles.css */
+
 body {
   overflow-x: hidden; /* Prevent horizontal scrolling */
 }
@@ -32,3 +32,8 @@ body {
   transform: translateX(-100%); /* Start off-screen */
   transition: transform 0.5s linear; /* Smooth transition */
 }
+
+.textShadow{
+  text-shadow: 0 0 30px rgba(247, 231, 160, 0.7);
+}
+
