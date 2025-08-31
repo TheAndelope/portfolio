@@ -22,6 +22,7 @@ const Terminal = () => {
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [currentPath] = useState('~/portfolio');
+  const [isMobile, setIsMobile] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
 
@@ -82,7 +83,7 @@ const Terminal = () => {
     about: () => [
       "┌─ About Andy Duong ─┐",
       "│                   │",
-      "│ Stargazer & Developer │",
+      "│ High School Student & Developer │",
       "│ Passionate about ML, Game Dev,  │", 
       "│ and Competitive Programming     │",
       "│                   │",
@@ -142,10 +143,10 @@ const Terminal = () => {
     contact: () => [
       "Contact Information:",
       "===================",
-      "  📧 Email: hi@andyduong.dev",
-      "  🐙 GitHub: github.com/theandelope", 
-      "  💼 LinkedIn: linkedin.com/in/andy--duong",
-      "  🌐 Portfolio: andyduong.dev",
+      "  📧 Email: andy@example.com",
+      "  🐙 GitHub: github.com/andy-duong", 
+      "  💼 LinkedIn: linkedin.com/in/andy-duong",
+      "  🌐 Portfolio: andy-duong.dev",
       "",
       "Feel free to reach out for collaborations!"
     ],
@@ -236,6 +237,14 @@ const Terminal = () => {
   };
 
   useEffect(() => {
+    // Check if mobile
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
     inputRef.current?.focus();
     
     // Initial welcome message
@@ -247,12 +256,17 @@ const Terminal = () => {
         "║                                                           ║",
         "║  Type 'help' to see available commands                    ║",
         "║  Type 'about' to learn more about me                      ║",
+        isMobile ? "║  Swipe left/right for command history                    ║" : "║  Use arrow keys for command history                       ║",
         "║                                                           ║",
         "╚═══════════════════════════════════════════════════════════╝",
         ""
       ]}
     ]);
-  }, []);
+
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, [isMobile]);
 
   useEffect(() => {
     if (terminalRef.current) {
@@ -260,29 +274,74 @@ const Terminal = () => {
     }
   }, [history]);
 
+  // Touch/Swipe handlers for mobile
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe && commandHistory.length > 0) {
+      // Swipe left - next command
+      if (historyIndex === -1) return;
+      const newIndex = historyIndex + 1;
+      if (newIndex >= commandHistory.length) {
+        setHistoryIndex(-1);
+        setInput('');
+      } else {
+        setHistoryIndex(newIndex);
+        setInput(commandHistory[newIndex]);
+      }
+    }
+
+    if (isRightSwipe && commandHistory.length > 0) {
+      // Swipe right - previous command
+      const newIndex = historyIndex === -1 ? commandHistory.length - 1 : Math.max(0, historyIndex - 1);
+      setHistoryIndex(newIndex);
+      setInput(commandHistory[newIndex]);
+    }
+  };
+
   const handleTerminalClick = () => {
     inputRef.current?.focus();
   };
 
   return (
     <div 
-      className="min-h-screen bg-black text-green-400 font-mono text-sm leading-relaxed cursor-text"
+      className="min-h-screen bg-black text-green-400 font-mono leading-relaxed cursor-text
+                 text-xs sm:text-sm md:text-sm lg:text-base
+                 touch-pan-y"
       onClick={handleTerminalClick}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       {/* Terminal Header */}
       <div className="bg-gray-800 text-white p-2 flex items-center space-x-2 border-b border-gray-600">
         <div className="flex space-x-1">
-          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-          <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+          <div className="w-2 h-2 sm:w-3 sm:h-3 bg-red-500 rounded-full"></div>
+          <div className="w-2 h-2 sm:w-3 sm:h-3 bg-yellow-500 rounded-full"></div>
+          <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full"></div>
         </div>
-        <span className="text-sm text-gray-300">andy@portfolio-terminal</span>
+        <span className="text-xs sm:text-sm text-gray-300 truncate">andy@portfolio-terminal</span>
       </div>
 
       {/* Terminal Content */}
       <div 
         ref={terminalRef}
-        className="p-4 h-[calc(100vh-2.5rem)] overflow-y-auto"
+        className="p-2 sm:p-4 h-[calc(100vh-2.5rem)] sm:h-[calc(100vh-2.5rem)] overflow-y-auto overflow-x-hidden"
       >
         {/* History */}
         {history.map((entry, index) => (
@@ -314,20 +373,31 @@ const Terminal = () => {
         ))}
 
         {/* Current Input Line */}
-        <div className="flex items-center">
-          <span className="text-blue-400 mr-2">{currentPath}$</span>
+        <div className="flex items-center flex-wrap">
+          <span className="text-blue-400 mr-1 sm:mr-2 flex-shrink-0 text-xs sm:text-sm">{currentPath}$</span>
           <input
             ref={inputRef}
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="bg-transparent outline-none text-green-400 font-mono flex-1"
+            className="bg-transparent outline-none text-green-400 font-mono flex-1 min-w-0
+                       text-xs sm:text-sm"
             autoFocus
             spellCheck={false}
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
           />
-          <span className="animate-pulse text-green-400">█</span>
+          <span className="animate-pulse text-green-400 ml-1">█</span>
         </div>
+
+        {/* Mobile Instructions */}
+        {isMobile && commandHistory.length > 0 && (
+          <div className="text-gray-500 text-xs mt-2 text-center">
+            ← Swipe left/right for command history →
+          </div>
+        )}
       </div>
     </div>
   );
