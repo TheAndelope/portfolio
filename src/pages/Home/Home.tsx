@@ -1,221 +1,336 @@
-import { useEffect, useState, useRef } from "react";
-import BIRDS from "vanta/dist/vanta.birds.min";
-import * as THREE from "three";
-import WordRotate from "../../components/rotate";
-import { FaGithub, FaDev, FaItchIo } from 'react-icons/fa';
-import '../../index.css'
-interface ProjectDetail {
+import React, { useState, useEffect, useRef } from 'react';
+
+interface HistoryEntry {
+  type: 'command' | 'output' | 'error';
+  content: string | string[];
+}
+
+interface Project {
   title: string;
   description: string;
-  img?: string;
-  demo?: string;
-  sum?: string;
-  tags?: string[];
-  links?: { [key: string]: string };
+  tech: string;
+  links?: {
+    github?: string;
+    devpost?: string;
+  };
+  details: string;
 }
 
-function Home() {
-  const [vantaEffect, setVantaEffect] = useState<any>(null);
-  //const [scrollProgress, setScrollProgress] = useState<number[]>([]);
-  const projectSectionRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const stickyRef = useRef<HTMLDivElement | null>(null);
+const Terminal = () => {
+  const [input, setInput] = useState('');
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [commandHistory, setCommandHistory] = useState<string[]>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
+  const [currentPath, setCurrentPath] = useState('~/portfolio');
+  const inputRef = useRef<HTMLInputElement>(null);
+  const terminalRef = useRef<HTMLDivElement>(null);
 
-  // Initialize Vanta effect
-  useEffect(() => {
-    if (!vantaEffect) {
-      setVantaEffect(
-        BIRDS({
-          el: document.getElementById("vanta-bg"),
-          THREE: THREE,
-          mouseControls: true,
-          touchControls: true,
-          gyroControls: false,
-          minHeight: 200.0,
-          minWidth: 200.0,
-          scale: 1.0,
-          scaleMobile: 1.0,
-          color1: 0xd4af37,
-          color2: 0x8c7853,
-          quantity: 4,
-          birdSize: 1.5,
-          wingSpan: 40.0,
-          speedLimit: 10.0,
-          backgroundColor: 0x000A1D,
-          colorMode: "varianceGradient",
-        })
-      );
+  const projects: Record<string, Project> = {
+    identibear: {
+      title: "Identibear",
+      description: "A Machine Learning tool designed to aid Dementia and Prosopagnosia patients submitted to Hack The 6ix.",
+      tech: "Python, Keras, OpenCV, Machine Learning",
+      links: {
+        github: "https://github.com/Solaror0/Identibear",
+        devpost: "https://devpost.com/software/identibear-your-memory-companion"
+      },
+      details: "Identibear assists individuals with memory-related conditions by recognizing faces and offering contextual information. Users upload videos of faces with details, and the CNN model provides real-time recognition through webcam feed."
+    },
+    portfolio: {
+      title: "Portfolio Website",
+      description: "A React and Tailwind CSS portfolio showcasing various programming projects.",
+      tech: "React, Tailwind CSS, JavaScript",
+      details: "My first major frontend project that helped me understand modern web development principles and responsive design."
+    },
+    neo_dev_league: {
+      title: "Neo Developer League", 
+      description: "A competitive programming league for high schoolers that I co-founded.",
+      tech: "Python, Gmail API, OpenAI API, Google Sheets API",
+      details: "Responsible for sponsor outreach and fund management. Built automated email system for sponsor outreach using Gmail and OpenAI APIs."
+    },
+    hush: {
+      title: "hush",
+      description: "A voice-responsive horror game developed for HawkHacks.",
+      tech: "Game Development, 3D Modeling, AI Programming",
+      details: "Horror game where monster AI responds to player voice volume. Led programming for monster AI and created 3D map modeling."
     }
-    return () => {
-      if (vantaEffect) {
-        vantaEffect.destroy(); // Clean up on unmount
-      }
-    };
-  }, [vantaEffect]);
+  };
 
-  // Handle scroll to update scroll progress
-  useEffect(() => {
-    /*
-    const handleScroll = () => {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const viewportHeight = window.innerHeight;
-
-      const newProgress = projectSectionRefs.current.map((sectionRef) => {
-        if (sectionRef) {
-          const sectionTop = sectionRef.getBoundingClientRect().top + scrollTop;
-          const maxScroll = document.documentElement.scrollHeight - viewportHeight;
-
-          if (scrollTop > sectionTop - viewportHeight) {
-            const progress = Math.min(1, (scrollTop - sectionTop) / (maxScroll - sectionTop));
-            return progress;
-          }
-        }
-        return 0;
-      });
-
-      setScrollProgress(newProgress);
-      
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    }; */
-  }, []);
-
-  const projectDetails: ProjectDetail[] = [
-    { title: "Identibear", img: '/images/IdentiBear.png', demo: 'ndMO66xyYUE', sum: 'A Machine Learning tool designed to aid Dementia and Prosopagnosia patients submitted to Hack The 6ix.', tags: ['Python', 'Keras', 'OpenCV', 'Machine Learning'], links: { github: 'https://github.com/Solaror0/Identibear', devpost: 'https://devpost.com/software/identibear-your-memory-companion' }, 
-      description: "Identibear is a project designed to assist individuals with memory-related conditions, such as Dementia and Prosopagnosia, by recognizing faces and offering contextual information about them. Users upload a short video of a person’s face, along with details like their name, relationship, and significant memories. The system processes the video to extract frames, which are then used to train a Convolutional Neural Network (CNN). This model is integrated with a real-time webcam feed, enabling it to identify individuals and provide instant feedback, including their name and relationship to the user. The project combines machine learning with practical application, offering a user-friendly interface to support memory and recognition needs. In this project, I was tasked with the development and training of the CNN model for Identibear, which involved processing video data into images and applying feature engineering to improve the dataset for training. I also enhanced the dataset through data augmentation via adding preprocessing layers to the model. Additionally, I implemented real-time image processing, enabling the model to recognize faces from a live camera feed and provide personalized information."},
-    { title: "Portfolio ", 
-      description: "Details for Project 2" },
-    { title: "Neo Developer League", 
-      description: "Details for Project 3" },
-    { title: "hush", 
-      description: "Details for Project 4" }
+  const skills = [
+    "Python", "JavaScript", "React", "Machine Learning", "OpenCV", "Keras",
+    "Game Development", "3D Modeling", "API Integration", "Competitive Programming",
+    "Frontend Development", "Backend Development"
   ];
 
+  const commands: Record<string, () => string[]> = {
+    help: () => [
+      "Available commands:",
+      "  help        - Show this help message",
+      "  about       - Learn about Andy Duong", 
+      "  skills      - View technical skills",
+      "  projects    - List all projects",
+      "  cat [project] - View project details",
+      "  ls          - List directory contents",
+      "  clear       - Clear terminal",
+      "  contact     - Get contact information",
+      "  whoami      - Display current user",
+      "  pwd         - Show current directory",
+      "  tree        - Show project structure",
+      ""
+    ],
+    
+    about: () => [
+      "┌─ About Andy Duong ─┐",
+      "│                   │",
+      "│ Stargazer & Developer │",
+      "│ Passionate about ML, Game Dev,  │", 
+      "│ and Competitive Programming     │",
+      "│                   │",
+      "│ Roles: Game Developer, ML Dev,  │",
+      "│        Data Scientist, Hacker    │",
+      "│                   │",
+      "└───────────────────┘",
+      ""
+    ],
+
+    skills: () => [
+      "Technical Skills:",
+      "================",
+      ...skills.map(skill => `  ◆ ${skill}`),
+      "",
+      `Total skills: ${skills.length}`
+    ],
+
+    projects: () => [
+      "Projects Directory:",
+      "==================",
+      ...Object.keys(projects).map(key => 
+        `  📁 ${key.padEnd(15)} - ${projects[key].title}`
+      ),
+      "",
+      "Use 'cat [project_name]' to view details"
+    ],
+
+    ls: () => [
+      "total 4",
+      "drwxr-xr-x  2 andy andy 4096 Jan 15 2025 projects/",
+      "drwxr-xr-x  2 andy andy 4096 Jan 15 2025 skills/", 
+      "-rw-r--r--  1 andy andy  256 Jan 15 2025 about.txt",
+      "-rw-r--r--  1 andy andy  512 Jan 15 2025 contact.txt",
+      "-rw-r--r--  1 andy andy  128 Jan 15 2025 README.md",
+      ""
+    ],
+
+    tree: () => [
+      "~/portfolio",
+      "├── projects/",
+      "│   ├── identibear/",
+      "│   ├── portfolio/", 
+      "│   ├── neo_dev_league/",
+      "│   └── hush/",
+      "├── skills/",
+      "├── about.txt",
+      "├── contact.txt",
+      "└── README.md",
+      ""
+    ],
+
+    whoami: () => ["andy"],
+
+    pwd: () => [currentPath],
+
+    contact: () => [
+      "Contact Information:",
+      "===================",
+      "  📧 Email: andy@example.com",
+      "  🐙 GitHub: github.com/andy-duong", 
+      "  💼 LinkedIn: linkedin.com/in/andy-duong",
+      "  🌐 Portfolio: andy-duong.dev",
+      "",
+      "Feel free to reach out for collaborations!"
+    ],
+
+    clear: () => {
+      setHistory([]);
+      return [];
+    }
+  };
+
+  const handleCommand = (cmd: string) => {
+    const trimmed = cmd.trim().toLowerCase();
+    const parts = trimmed.split(' ');
+    const command = parts[0];
+    const args = parts.slice(1);
+
+    // Add command to history
+    setHistory(prev => [...prev, { type: 'command', content: `${currentPath}$ ${cmd}` }]);
+
+    if (command === '') return;
+
+    if (commands[command]) {
+      const output = commands[command]();
+      if (output.length > 0) {
+        setHistory(prev => [...prev, { type: 'output', content: output }]);
+      }
+    } else if (command === 'cat' && args.length > 0) {
+      const projectName = args[0];
+      if (projects[projectName]) {
+        const project = projects[projectName];
+        const output: string[] = [
+          `╭─ ${project.title} ─╮`,
+          `│ ${project.description}`,
+          `│`,
+          `│ Tech Stack: ${project.tech}`,
+          `│`,
+          `│ Details:`,
+          `│ ${project.details}`,
+        ];
+        
+        if (project.links) {
+          output.push(`│`);
+          if (project.links.github) {
+            output.push(`│ 🔗 GitHub: ${project.links.github}`);
+          }
+          if (project.links.devpost) {
+            output.push(`│ 🔗 DevPost: ${project.links.devpost}`);
+          }
+        }
+        
+        output.push(`╰${'─'.repeat(Math.max(project.title.length + 4, 50))}╯`);
+        
+        setHistory(prev => [...prev, { type: 'output', content: output }]);
+      } else {
+        setHistory(prev => [...prev, { type: 'error', content: [`cat: ${projectName}: No such file or directory`] }]);
+      }
+    } else {
+      setHistory(prev => [...prev, { type: 'error', content: [`Command not found: ${command}. Type 'help' for available commands.`] }]);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleCommand(input);
+      setCommandHistory(prev => [...prev, input]);
+      setHistoryIndex(-1);
+      setInput('');
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (commandHistory.length > 0) {
+        const newIndex = historyIndex === -1 ? commandHistory.length - 1 : Math.max(0, historyIndex - 1);
+        setHistoryIndex(newIndex);
+        setInput(commandHistory[newIndex]);
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (historyIndex !== -1) {
+        const newIndex = historyIndex + 1;
+        if (newIndex >= commandHistory.length) {
+          setHistoryIndex(-1);
+          setInput('');
+        } else {
+          setHistoryIndex(newIndex);
+          setInput(commandHistory[newIndex]);
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    inputRef.current?.focus();
+    
+    // Initial welcome message
+    setHistory([
+      { type: 'output', content: [
+        "╔═══════════════════════════════════════════════════════════╗",
+        "║                                                           ║",
+        "║           Welcome to Andy Duong's Terminal Portfolio      ║", 
+        "║                                                           ║",
+        "║  Type 'help' to see available commands                    ║",
+        "║  Type 'about' to learn more about me                      ║",
+        "║                                                           ║",
+        "╚═══════════════════════════════════════════════════════════╝",
+        ""
+      ]}
+    ]);
+  }, []);
+
+  useEffect(() => {
+    if (terminalRef.current) {
+      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+    }
+  }, [history]);
+
+  const handleTerminalClick = () => {
+    inputRef.current?.focus();
+  };
+
   return (
-    <>
-      <div id="vanta-bg" className="h-[40rem]">
-      <header className="relative p-4 z-10 bg-cover bg-center bg-no-repeat"
-                style={{ backgroundImage: 'url(/public/images/sta))' }}>
-            <nav className="fixed top-0 left-0 m-2 z-20">
-                <ul className="list-none shadow-softglow m-0 p-2 bg-accent overflow-hidden shadow-custom rounded-2xl flex justify-start items-center">
-                    <li className="mr-4 ml-2">
-                        <a href="Home" className="text-secondary hover:text-primary">Home</a>
-                    </li>
-                    <li className="mr-4">
-                        <a href="#" className="text-secondary hover:text-primary">About</a>
-                    </li>
-                    <li className="mr-4">
-                        <a href="#" className="text-secondary hover:text-primary">Contact</a>
-                    </li>
-                </ul>
-            </nav>
-        </header>
-        <div className="flex flex-col items-center justify-center h-screen p-4 -mt-16 font-sans">
-          <h1 className="textShadow text-center text-5xl sm:text-5xl md:text-8xl lg:text-8xl font-sans font-bold text-title z-10 text-text">
-            Hey! I'm Andy Duong
-          </h1>
-          <h1 className="textShadow text-xl xl:text-3xl text-center font-sans font-bold text-title z-10 text-text mt-3 mb-7 sm:mb-7 md:mb-14 lg:mb-7">
-            and I'm a
-          </h1>
-          <div className="relative text-shadow text-xl md:text-2xl lg:text-3xl h-10 md:h-12 lg:h-14 flex items-center justify-center">
-            <WordRotate
-              words={[
-                "Game Developer",
-                "High Schooler",
-                "Mobile Developer",
-                "Hackathon Enthusiast",
-                "Horror Buff",
-                "ML Developer",
-                "Competitive Programmer",
-                "Web Developer",
-                "Engineering Enthusiast",
-                "Stargazer",
-              ]}
-            />
-          </div>
+    <div 
+      className="min-h-screen bg-black text-green-400 font-mono text-sm leading-relaxed cursor-text"
+      onClick={handleTerminalClick}
+    >
+      {/* Terminal Header */}
+      <div className="bg-gray-800 text-white p-2 flex items-center space-x-2 border-b border-gray-600">
+        <div className="flex space-x-1">
+          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+          <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
         </div>
+        <span className="text-sm text-gray-300">andy@portfolio-terminal</span>
       </div>
 
-      <section className="font-sans">
-        <h1 className="bg-primary p-2 pt-10 font-sans font-bold text-center text-3xl md:text-4xl lg:text-5xl text-secondary">Projects</h1>
-      </section>
-
-      {projectDetails.map((project, index) => (
-        <section
-          key={index}
-          ref={(el) => {
-            projectSectionRefs.current[index] = el as HTMLDivElement;
-          }}
-          className="relative w-full h-[80rem] bg-primary py-10 font-sans"
-        >
-          <div className="relative h-full">
-            <div className="sticky top-0 w-full bg-primary p-4 md:p-8 lg:p-10" ref={stickyRef}>
-              <div className="project-container flex flex-col md:flex-row items-start justify-between">
-                <div className="project-card relative bg-accent p-4 md:p-6 lg:p-8 rounded-lg shadow-glow w-full md:w-2/5 mb-10 backdrop-blur-lg rounded-lg">
-                  <h2 className="textShadow text-4xl md:text-4xl lg:text-5xl xl:text-6xl font-sans font-bold text-center pb-5 text-secondary">
-                    {project.title}
-                  </h2>
-                  <div className="project-links flex justify-center md:justify-between">
-                    <div className="video-container mx-auto h-[15rem] w-4/5">
-                      <iframe
-                        className="w-full h-full"
-                        src={"https://www.youtube.com/embed/" + project.demo}
-                        title="YouTube video player"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                      ></iframe>
-                    </div>
-                  </div>
-                  <div className="flex">
-                    <p className="mt-4 mx-auto font-sans font-bold text-center text-text text-lg md:text-xl lg:text-xl font-semibold">
-                      {project.sum}
-                    </p>
-                  </div>
-                  <div className="px-4 md:px-6 pt-4 pb-2">
-                    {project.tags?.map((str, index) => (
-                      <span key={index} className="inline-block bg-gray-200 rounded-full px-2 py-1 text-xs md:text-sm font-semibold text-accent mr-2 mb-2">
-                        #{str}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="flex justify-center space-x-4 mt-4">
-                    {project.links?.github && (
-                      <a href={project.links.github} target="_blank" rel="noopener noreferrer" className="text-black hover:text-secondary">
-                        <FaGithub size={24} />
-                      </a>
-                    )}
-                    {project.links?.devpost && (
-                      <a href={project.links.devpost} target="_blank" rel="noopener noreferrer" className="text-black hover:text-secondary">
-                        <FaDev size={24} />
-                      </a>
-                    )}
-                    {project.links?.itch && (
-                      <a href={project.links.itch} target="_blank" rel="noopener noreferrer" className="text-black hover:text-secondary">
-                        <FaItchIo size={24} />
-                      </a>
-                    )}
-                  </div>
-                </div>
-                <div className="project-details w-full sm:w-full md:w-1/2 lg:w-1/2 mb-10 text-xl mx-auto lg:mx-0">
-                  <p className="text-text text-center 
-                font-sans font-bold text-sm sm:text-sm md:text-lg lg:text-xl 
-                sm:mx-auto md:mx-auto lg:mx-0 
-                sm:my-auto md:my-auto lg:my-0">
-                    {project.description}
-                  </p>
-                </div>
+      {/* Terminal Content */}
+      <div 
+        ref={terminalRef}
+        className="p-4 h-[calc(100vh-2.5rem)] overflow-y-auto"
+      >
+        {/* History */}
+        {history.map((entry, index) => (
+          <div key={index} className="mb-1">
+            {entry.type === 'command' && (
+              <div className="text-blue-400">{entry.content}</div>
+            )}
+            {entry.type === 'output' && (
+              <div className="text-green-400">
+                {Array.isArray(entry.content) 
+                  ? entry.content.map((line, i) => (
+                      <div key={i}>{line}</div>
+                    ))
+                  : <div>{entry.content}</div>
+                }
               </div>
-            </div>
+            )}
+            {entry.type === 'error' && (
+              <div className="text-red-400">
+                {Array.isArray(entry.content)
+                  ? entry.content.map((line, i) => (
+                      <div key={i}>{line}</div>
+                    ))
+                  : <div>{entry.content}</div>
+                }
+              </div>
+            )}
           </div>
-        </section>
-      ))}
-      <footer className="bg-primary font-sans">
-      </footer>
-    </>
+        ))}
 
+        {/* Current Input Line */}
+        <div className="flex items-center">
+          <span className="text-blue-400 mr-2">{currentPath}$</span>
+          <input
+            ref={inputRef}
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            className="bg-transparent outline-none text-green-400 font-mono flex-1"
+            autoFocus
+            spellCheck={false}
+          />
+          <span className="animate-pulse text-green-400">█</span>
+        </div>
+      </div>
+    </div>
   );
-}
+};
 
-export default Home;
+export default Terminal;
