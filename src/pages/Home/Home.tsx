@@ -21,7 +21,7 @@ const Terminal = () => {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
-  const [currentPath, setCurrentPath] = useState('~/portfolio');
+  const [currentPath] = useState('~/portfolio');
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
 
@@ -87,7 +87,7 @@ const Terminal = () => {
       "│ and Competitive Programming     │",
       "│                   │",
       "│ Roles: Game Developer, ML Dev,  │",
-      "│        Data Scientist, Hacker    │",
+      "│        Web Developer, Hacker    │",
       "│                   │",
       "└───────────────────┘",
       ""
@@ -142,10 +142,10 @@ const Terminal = () => {
     contact: () => [
       "Contact Information:",
       "===================",
-      "  📧 Email: andy@example.com",
-      "  🐙 GitHub: github.com/andy-duong", 
-      "  💼 LinkedIn: linkedin.com/in/andy-duong",
-      "  🌐 Portfolio: andy-duong.dev",
+      "  📧 Email: hi@andyduong.dev",
+      "  🐙 GitHub: github.com/theandelope", 
+      "  💼 LinkedIn: linkedin.com/in/andy--duong",
+      "  🌐 Portfolio: andyduong.dev",
       "",
       "Feel free to reach out for collaborations!"
     ],
