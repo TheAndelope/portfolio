@@ -1,0 +1,47 @@
+{
+  "projects": [
+    {
+      "title": "GuideLine",
+      "description": "Brief description of what the project does",
+      "technologies": ["Kotlin", "OpenCV"],
+      "link": "https://project-url.com"
+    },
+    {
+      "title": "IdentiBear",
+      "description": "Another project description",
+      "technologies": ["Next.js", "TypeScript", "Tailwind"],
+      "link": "https://another-project.com"
+    },
+    {
+      "title": "TrivialGuessr",
+      "description": "Another project description",
+      "technologies": ["Next.js", "TypeScript", "Tailwind"],
+      "link": "https://another-project.com"
+    },
+    {
+      "title": "Chroma",
+      "description": "Another project description",
+      "technologies": ["Next.js", "TypeScript", "Tailwind"],
+      "link": "https://another-project.com"
+    },
+        {
+      "title": "Chroma",
+      "description": "Another project description",
+      "technologies": ["Next.js", "TypeScript", "Tailwind"],
+      "link": "https://another-project.com"
+    },
+    {
+      "title": "Chroma",
+      "description": "Another project description",
+      "technologies": ["Next.js", "TypeScript", "Tailwind"],
+      "link": "https://another-project.com"
+    },
+    {
+      "title": "Chroma",
+      "description": "Another project description",
+      "technologies": ["Next.js", "TypeScript", "Tailwind"],
+      "link": "https://another-project.com"
+    }
+
+  ]
+}
