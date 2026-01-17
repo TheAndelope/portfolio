@@ -12,7 +12,6 @@ interface MenuButtonProps {
 
 export const MenuButton: React.FC<MenuButtonProps> = ({ 
   item, 
-  index, 
   isHovered, 
   onHover, 
   onLeave, 

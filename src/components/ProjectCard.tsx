@@ -8,8 +8,7 @@ interface ProjectCardProps {
 }
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({ 
-  project, 
-  index, 
+  project,
   onClick 
 }) => {
   return (
