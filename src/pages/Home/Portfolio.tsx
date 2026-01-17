@@ -88,11 +88,11 @@ const Portfolio: React.FC = () => {
   };
 
   const floatingCards = [
-    { top: '100px', right: '150px', rotation: 'rotate(3deg)', animation: 'float 6s ease-in-out infinite', emoji: '🖼️', label: 'Gallery Image', width: '256px', height: '224px' },
-    { top: '200px', left: '100px', rotation: 'rotate(6deg)', animation: 'float2 7s ease-in-out infinite', delay: '1s', emoji: '📸', label: 'Photo', width: '224px', height: '288px' },
-    { bottom: '70px', right: '360px', rotation: 'rotate(-2deg)', animation: 'float3 5.5s ease-in-out infinite', delay: '0.5s', emoji: '🎨', label: 'Artwork', width: '288px', height: '240px' },
-    { bottom: '200px', right: '160px', rotation: 'rotate(6deg)', animation: 'float 6.5s ease-in-out infinite', delay: '1.5s', emoji: '🌄', label: 'Landscape', width: '240px', height: '256px' },
-    { bottom: '140px', left: '220px', rotation: 'rotate(-4deg)', animation: 'float2 6.8s ease-in-out infinite', delay: '0.8s', emoji: '🏞️', label: 'Nature', width: '256px', height: '224px' }
+    { top: '100px', right: '150px', rotation: 'rotate(3deg)', animation: 'float 6s ease-in-out infinite', label: 'Gallery Image', width: '256px', height: '224px' },
+    { top: '200px', left: '100px', rotation: 'rotate(6deg)', animation: 'float2 7s ease-in-out infinite', delay: '1s',  label: 'Photo', width: '224px', height: '288px' },
+    { bottom: '70px', right: '360px', rotation: 'rotate(-2deg)', animation: 'float3 5.5s ease-in-out infinite', delay: '0.5s', label: 'Artwork', width: '288px', height: '240px' },
+    { bottom: '200px', right: '160px', rotation: 'rotate(6deg)', animation: 'float 6.5s ease-in-out infinite', delay: '1.5s', label: 'Landscape', width: '240px', height: '256px' },
+    { bottom: '140px', left: '220px', rotation: 'rotate(-4deg)', animation: 'float2 6.8s ease-in-out infinite', delay: '0.8s', label: 'Nature', width: '256px', height: '224px' }
   ];
 
   return (
@@ -114,7 +114,6 @@ const Portfolio: React.FC = () => {
             <FloatingImageCard
               key={idx}
               imageNumber={randomImages[idx]}
-              emoji={card.emoji}
               label={card.label}
               onClose={() => handleCloseFloatingCard(idx)}
               style={{
@@ -190,7 +189,7 @@ const Portfolio: React.FC = () => {
                 <div className="text-xs text-gray-700 space-y-2 font-mono">
                   <div className="flex items-center">
                     <span className="text-green-600 mr-2">●</span>
-                    <span>Available for work</span>
+                    <span>available for work (seeking summer '26 internships)</span>
                   </div>
                   <div className="flex items-center">
                     <span className="text-gray-700 mr-2">&gt;</span>

@@ -2,7 +2,6 @@ import React from 'react';
 
 interface FloatingImageCardProps {
   imageNumber: number;
-  emoji: string;
   label: string;
   style: React.CSSProperties;
   onClose: () => void;
@@ -10,7 +9,6 @@ interface FloatingImageCardProps {
 
 export const FloatingImageCard: React.FC<FloatingImageCardProps> = ({ 
   imageNumber, 
-  emoji, 
   label, 
   style, 
   onClose 
@@ -32,9 +30,11 @@ export const FloatingImageCard: React.FC<FloatingImageCardProps> = ({
           ✕
         </button>
       </div>
-      <div className="xp-content w-full h-full flex items-center justify-center">
+      <div className="xp-content flex-1 overflow-hidden">
         <div className="text-center">
-          <div className="text-6xl mb-2">{emoji}</div>
+            <div><img 
+            src={`/images/${imageNumber}.jpg`}
+            className="w-full h-full object-cover object-center"/></div>
           <div className="text-xs font-mono text-gray-600">{label}</div>
         </div>
       </div>

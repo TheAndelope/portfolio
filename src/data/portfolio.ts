@@ -2,8 +2,8 @@ import { PortfolioData } from '../types';
 
 export const portfolioData: PortfolioData = {
   name: "andy duong",
-  title: "developer",
-  tagline: "building digital experiences that matter",
+  title: "aspiring data scientist, machine learning dev",
+  tagline: "relentless by design.",
   location: "waterloo, canada",
   menuItems: [
     {
@@ -40,6 +40,18 @@ export const portfolioData: PortfolioData = {
         "GitHub: github.com/theandelope",
         "Portfolio: andyduong.dev"
       ]
-    }
+    },
+    {
+      id: 'notes',
+      label: 'notes',
+      icon: '→',
+      content: ''
+    },
+    {
+      id: 'cool things',
+      label: 'cool things',
+      icon: '→',
+      content: ''
+    },
   ]
 };
