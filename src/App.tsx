@@ -1,13 +1,13 @@
 import {Routes, Route} from 'react-router-dom'
-import Home from "./pages/Home/Home.tsx"
+import Portfolio from "./pages/Home/Portfolio"
 function App() {
 
 
   return (
     <>
         <Routes>
-          <Route path="/" element={<Home/>}/>
-          <Route path="/Home" element={<Home/>}/>
+          <Route path="/" element={<div className="font-sans"> <Portfolio/> </div>}/>
+          <Route path="/Home" element={<div className="font-sans"> <Portfolio/> </div>}/>
 
         </Routes>
       

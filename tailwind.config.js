@@ -8,7 +8,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Noto Sans', 'sans-serif'],
+        sans: ['Tahoma', '"MS Sans Serif"', 'Verdana', 'Arial', 'sans-serif'],
       },
       screens: {
         'sm': '640px',
