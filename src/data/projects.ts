@@ -8,7 +8,7 @@ export const projectsData = {
     },
     {
       title: "heartbeat hunters",
-      description: "remote photoplethysmography for deepfak detection",
+      description: "remote photoplethysmography for deepfake detection",
       technologies: ["python", "opencv", "numpy", "scipy", "cupy", "pandas"],
       link: "http://localhost:5173/images/poster.pdf"
     },

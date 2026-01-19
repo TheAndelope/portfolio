@@ -7,12 +7,6 @@ export const portfolioData: PortfolioData = {
   location: "waterloo, canada",
   menuItems: [
     {
-      id: 'about',
-      label: 'about',
-      icon: '→',
-      content: ''
-    },
-    {
       id: 'skills',
       label: 'skills',
       icon: '→',
@@ -29,17 +23,6 @@ export const portfolioData: PortfolioData = {
       label: 'projects',
       icon: '→',
       content: []
-    },
-    {
-      id: 'contact',
-      label: 'contact',
-      icon: '→',
-      content: [
-        "Email: hi@andyduong.dev",
-        "LinkedIn: linkedin.com/in/andy--duong",
-        "GitHub: github.com/theandelope",
-        "Portfolio: andyduong.dev"
-      ]
     },
     {
       id: 'notes',

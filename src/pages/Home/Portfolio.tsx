@@ -88,11 +88,11 @@ const Portfolio: React.FC = () => {
   };
 
   const floatingCards = [
-    { top: '100px', right: '150px', rotation: 'rotate(3deg)', animation: 'float 6s ease-in-out infinite', label: 'Gallery Image', width: '256px', height: '224px' },
-    { top: '200px', left: '100px', rotation: 'rotate(6deg)', animation: 'float2 7s ease-in-out infinite', delay: '1s',  label: 'Photo', width: '224px', height: '288px' },
-    { bottom: '70px', right: '360px', rotation: 'rotate(-2deg)', animation: 'float3 5.5s ease-in-out infinite', delay: '0.5s', label: 'Artwork', width: '288px', height: '240px' },
-    { bottom: '200px', right: '160px', rotation: 'rotate(6deg)', animation: 'float 6.5s ease-in-out infinite', delay: '1.5s', label: 'Landscape', width: '240px', height: '256px' },
-    { bottom: '140px', left: '220px', rotation: 'rotate(-4deg)', animation: 'float2 6.8s ease-in-out infinite', delay: '0.8s', label: 'Nature', width: '256px', height: '224px' }
+    { top: '100px', right: '150px', rotation: 'rotate(3deg)', animation: 'float 6s ease-in-out infinite', width: '320px'},
+    { top: '200px', left: '100px', rotation: 'rotate(6deg)', animation: 'float2 7s ease-in-out infinite', delay: '1s', width: '280px'},
+    { bottom: '70px', right: '360px', rotation: 'rotate(-2deg)', animation: 'float3 5.5s ease-in-out infinite', delay: '0.5s', width: '360px'},
+    { bottom: '200px', right: '160px', rotation: 'rotate(6deg)', animation: 'float 6.5s ease-in-out infinite', delay: '1.5s', width: '300px'},
+    { bottom: '140px', left: '220px', rotation: 'rotate(-4deg)', animation: 'float2 6.8s ease-in-out infinite', delay: '0.8s', width: '320px'}
   ];
 
   return (
@@ -114,7 +114,7 @@ const Portfolio: React.FC = () => {
             <FloatingImageCard
               key={idx}
               imageNumber={randomImages[idx]}
-              label={card.label}
+              label={""}
               onClose={() => handleCloseFloatingCard(idx)}
               style={{
                 top: card.top,
@@ -122,7 +122,6 @@ const Portfolio: React.FC = () => {
                 left: card.left,
                 right: card.right,
                 width: card.width,
-                height: card.height,
                 transform: card.rotation,
                 zIndex: 5,
                 animation: card.animation,
@@ -165,8 +164,10 @@ const Portfolio: React.FC = () => {
 
             <div className="p-8 xp-content flex-1 overflow-y-auto">
               <div className="mb-6">
-                <p className="text-gray-700 text-sm font-mono">{portfolioData.title}</p>
                 <p className="text-gray-600 text-sm italic mt-2">{portfolioData.tagline}</p>
+                <p className="text-gray-700 text-sm font-mono">{portfolioData.title}</p>
+                
+                <p className="text-gray-700 text-sm font-mono">About Me</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

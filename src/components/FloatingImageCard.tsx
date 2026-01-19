@@ -30,11 +30,12 @@ export const FloatingImageCard: React.FC<FloatingImageCardProps> = ({
           ✕
         </button>
       </div>
-      <div className="xp-content flex-1 overflow-hidden">
+      <div className="xp-content w-full overflow-y-auto">
         <div className="text-center">
-            <div><img 
-            src={`/images/${imageNumber}.jpg`}
-            className="w-full h-full object-cover object-center"/></div>
+            <div><img
+  src={`/images/${imageNumber}.jpg`}
+  className="w-full h-auto block"
+/></div>
           <div className="text-xs font-mono text-gray-600">{label}</div>
         </div>
       </div>
