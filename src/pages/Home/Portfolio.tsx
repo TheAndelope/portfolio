@@ -88,11 +88,11 @@ const Portfolio: React.FC = () => {
   };
 
   const floatingCards = [
-    { top: '100px', right: '150px', rotation: 'rotate(3deg)', animation: 'float 6s ease-in-out infinite', width: '320px'},
-    { top: '200px', left: '100px', rotation: 'rotate(6deg)', animation: 'float2 7s ease-in-out infinite', delay: '1s', width: '280px'},
-    { bottom: '70px', right: '360px', rotation: 'rotate(-2deg)', animation: 'float3 5.5s ease-in-out infinite', delay: '0.5s', width: '360px'},
-    { bottom: '200px', right: '160px', rotation: 'rotate(6deg)', animation: 'float 6.5s ease-in-out infinite', delay: '1.5s', width: '300px'},
-    { bottom: '140px', left: '220px', rotation: 'rotate(-4deg)', animation: 'float2 6.8s ease-in-out infinite', delay: '0.8s', width: '320px'}
+    { top: '10vh', right: 'clamp(10px, 4vw, 150px)', width: 'clamp(200px, 20vw, 320px)', rotation: '', animation: 'float 6s ease-in-out infinite'},
+    { top: '20vh', left: '8vw', width: 'clamp(180px, 18vw, 280px)', rotation: '', animation: 'float2 7s ease-in-out infinite', delay: '1s'},
+    { bottom: '10vh', right: '25vw', width: 'clamp(220px, 22vw, 360px)', rotation: '', animation: 'float3 5.5s ease-in-out infinite', delay: '0.5s'},
+    { bottom: '25vh', right: '12vw', width: 'clamp(190px, 19vw, 300px)', rotation: '', animation: 'float 6.5s ease-in-out infinite', delay: '1.5s'},
+    { bottom: '18vh', left: '18vw', width: 'clamp(200px, 20vw, 320px)', rotation: '', animation: 'float2 6.8s ease-in-out infinite', delay: '0.8s'}
   ];
 
   return (
@@ -140,7 +140,8 @@ const Portfolio: React.FC = () => {
                 isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
               }`}
               style={{ 
-                height: '700px',
+                width: 'clamp(320px, 60vw, 900px)',
+                height: 'clamp(500px, 60vh, 700px)',
                 cursor: isDraggingMain ? 'grabbing' : 'default',
                 transition: isLoaded ? 'opacity 1s, transform 1s' : 'none'
               }}

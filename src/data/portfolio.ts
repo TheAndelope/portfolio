@@ -2,7 +2,7 @@ import { PortfolioData } from '../types';
 
 export const portfolioData: PortfolioData = {
   name: "andy duong",
-  title: "aspiring data scientist, machine learning dev",
+  title: "up-and-coming data scientist, machine learning dev",
   tagline: "relentless by design.",
   location: "waterloo, canada",
   menuItems: [
