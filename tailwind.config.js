@@ -24,10 +24,7 @@ export default {
         'border-radius': '0.5rem'
       },
       colors: {
-        primary: "#000A1D",
-        secondary: "#F7E7A0",
-        accent: "#2d3d3d",
-        text: "#ECF0F1"
+        primary: "#0054e3"
       },
       fontSize: {
         title: "5rem",

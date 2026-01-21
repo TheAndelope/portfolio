@@ -7,6 +7,12 @@ export const portfolioData: PortfolioData = {
   location: "waterloo, canada",
   menuItems: [
     {
+      id: 'projects',
+      label: 'projects',
+      icon: '→',
+      content: []
+    },
+    {
       id: 'skills',
       label: 'skills',
       icon: '→',
@@ -17,12 +23,6 @@ export const portfolioData: PortfolioData = {
         "Tools: Git, Docker, AWS, Vercel, Firebase, Supabase",
         "Design: Figma, Blender"
       ]
-    },
-    {
-      id: 'projects',
-      label: 'projects',
-      icon: '→',
-      content: []
     },
     {
       id: 'notes',

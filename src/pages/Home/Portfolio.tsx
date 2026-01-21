@@ -19,10 +19,27 @@ const Portfolio: React.FC = () => {
   const [expandedProject, setExpandedProject] = useState<number | null>(null);
   const [visibleFloatingCards, setVisibleFloatingCards] = useState<number[]>([]);
   const [mainWindowVisible, setMainWindowVisible] = useState(true);
+
+  const handleCloseActiveWindow = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (selectedMenu !== null) {
+      setSelectedMenu(null);
+    } else {
+      setMainWindowVisible(false);
+  };}
+
   
   const [mainCardRef, isDraggingMain] = useDraggable<HTMLDivElement>({ 
     handleSelector: '.xp-title-bar' 
   });
+
+  useEffect(() => {
+  const onKeyDown = (e: KeyboardEvent) => {
+     if ((e.key === 'x' || e.key === 'X') && selectedMenu !== null) setSelectedMenu(null);
+  };
+  window.addEventListener('keydown', onKeyDown);
+  return () => window.removeEventListener('keydown', onKeyDown);
+}, [selectedMenu]);
 
   useEffect(() => {
     setIsLoaded(true);
@@ -89,18 +106,21 @@ const Portfolio: React.FC = () => {
 
   const floatingCards = [
     { top: '10vh', right: 'clamp(10px, 4vw, 150px)', width: 'clamp(200px, 20vw, 320px)', rotation: '', animation: 'float 6s ease-in-out infinite'},
-    { top: '20vh', left: '8vw', width: 'clamp(180px, 18vw, 280px)', rotation: '', animation: 'float2 7s ease-in-out infinite', delay: '1s'},
-    { bottom: '10vh', right: '25vw', width: 'clamp(220px, 22vw, 360px)', rotation: '', animation: 'float3 5.5s ease-in-out infinite', delay: '0.5s'},
-    { bottom: '25vh', right: '12vw', width: 'clamp(190px, 19vw, 300px)', rotation: '', animation: 'float 6.5s ease-in-out infinite', delay: '1.5s'},
-    { bottom: '18vh', left: '18vw', width: 'clamp(200px, 20vw, 320px)', rotation: '', animation: 'float2 6.8s ease-in-out infinite', delay: '0.8s'}
+    { top: '20vh', left: 'clamp(10px, 3vw, 8vw)', width: 'clamp(180px, 18vw, 280px)', rotation: '', animation: 'float2 7s ease-in-out infinite', delay: '1s'},
+    { bottom: '8vh', right: 'clamp(10px, 8vw, 25vw)', width: 'clamp(220px, 22vw, 360px)', rotation: '', animation: 'float3 5.5s ease-in-out infinite', delay: '0.5s'},
+    { bottom: '25vh', right: 'clamp(10px, 2vw, 12vw)', width: 'clamp(190px, 19vw, 300px)', rotation: '', animation: 'float 6.5s ease-in-out infinite', delay: '1.5s'},
+    { bottom: '18vh', left: 'clamp(10px, 4vw, 18vw)', width: 'clamp(200px, 20vw, 320px)', rotation: '', animation: 'float2 6.8s ease-in-out infinite', delay: '0.8s'}
   ];
 
   return (
     <>
 
       <div className="min-h-screen bg-[#F5F5DC] grid-bg flex items-center justify-center p-4 relative overflow-hidden">
-        
+        <div onClick={() => {
+            window.location.href = 'https://andyduong.dev';}}
+            className="cursor-pointer">
         <ProfileCard />
+        </div>
 
         {/* Floating decorative elements */}
         <div className="absolute top-20 left-20 w-64 h-64 bg-amber-300/20 rounded-full blur-3xl" 
@@ -141,7 +161,7 @@ const Portfolio: React.FC = () => {
               }`}
               style={{ 
                 width: 'clamp(320px, 60vw, 900px)',
-                height: 'clamp(500px, 60vh, 700px)',
+                height: 'clamp(500px, 65vh, 700px)',
                 cursor: isDraggingMain ? 'grabbing' : 'default',
                 transition: isLoaded ? 'opacity 1s, transform 1s' : 'none'
               }}
@@ -152,26 +172,23 @@ const Portfolio: React.FC = () => {
                   <span>💼</span>
                   {portfolioData.name} - portfolio
                 </div>
-                <button 
-                  className="xp-close-button" 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setMainWindowVisible(false);
-                  }}
-                >
-                  ✕
-                </button>
+                  <button
+                    className="xp-close-button"
+                    onClick={handleCloseActiveWindow}
+                  >
+                    ✕
+                  </button>
               </div>
 
-            <div className="p-8 xp-content flex-1 overflow-y-auto">
-              <div className="mb-6">
-                <p className="text-gray-600 text-sm italic mt-2">{portfolioData.tagline}</p>
-                <p className="text-gray-700 text-sm font-mono">{portfolioData.title}</p>
-                
-                <p className="text-gray-700 text-sm font-mono">About Me</p>
+            <div className="p-8 xp-content flex flex-col flex-1 overflow-y-auto">
+              <h4 className="text-primary text-2xl font-mono text-left">andy duong</h4>
+              <div className="mb-6 space-y-1">
+                <p className="text-gray-700 text-m font-mono">{portfolioData.title}</p>
+                <p className="text-gray-600 text-m italic">{portfolioData.tagline}</p>
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <p className="text-primary text-2xl underline font-mono">About Me</p>
+              
+              <div className="mt-auto grid grid-cols-1 md:grid-cols-2 gap-4">
                 {portfolioData.menuItems.map((item, index) => (
                   <MenuButton
                     key={item.id}
@@ -221,15 +238,12 @@ const Portfolio: React.FC = () => {
                 <span>📄</span>
                 {portfolioData.menuItems.find(m => m.id === selectedMenu)?.label} - {portfolioData.name}
               </div>
-              <button 
-                className="xp-close-button" 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setSelectedMenu(null);
-                }}
-              >
-                ✕
-              </button>
+                <button
+                  className="xp-close-button"
+                  onClick={handleCloseActiveWindow}
+                >
+                  ✕
+                </button>
             </div>
 
             <div className="xp-content p-8 flex-1 overflow-y-auto">
@@ -259,8 +273,6 @@ const Portfolio: React.FC = () => {
               <div className="flex items-center justify-between text-xs font-mono text-gray-700">
                 <span>Click X to return to menu</span>
                 <span className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-green-600 rounded-full"></span>
-                  Online
                 </span>
               </div>
             </div>
