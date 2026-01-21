@@ -15,7 +15,7 @@ export const FloatingImageCard: React.FC<FloatingImageCardProps> = ({
 }) => {
     return (
         <div
-            className="fixed xp-window overflow-hidden"
+            className="fixed xp-window overflow-hidden floating-card"
             style={style}
         >
             <div className="xp-title-bar">

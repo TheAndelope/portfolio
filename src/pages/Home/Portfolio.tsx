@@ -22,9 +22,10 @@ const Portfolio: React.FC = () => {
 
   const handleCloseActiveWindow = (e?: React.MouseEvent) => {
     e?.stopPropagation();
+    const isMobile = window.innerWidth <= 768;
     if (selectedMenu !== null) {
       setSelectedMenu(null);
-    } else {
+    } else if (!isMobile) {
       setMainWindowVisible(false);
   };}
 

@@ -2,7 +2,7 @@ import React from 'react';
 
 export const ProfileCard: React.FC = () => {
   return (
-    <div className="fixed top-0 left-0 xp-window z-10" style={{ width: 'clamp(180px, 15vw, 240px)' }}>
+    <div className="fixed top-0 left-0 xp-window z-10 profile-card" style={{ width: 'clamp(180px, 15vw, 240px)' }}>
       <div className="xp-title-bar flex flex-row items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <img
