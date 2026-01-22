@@ -23,10 +23,11 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
       
       <div 
         ref={modalRef}
-        className="fixed z-50 xp-window"
+        className="fixed z-50 xp-window project-modal"
         style={{
           left: '50%',
           top: '50%',
+          transform: 'translate(-50%, -50%)',
           width: '700px',
           maxHeight: '600px',
           cursor: isDragging ? 'grabbing' : 'default'

@@ -12,6 +12,32 @@
     margin: 0 !important;
     border-radius: 0 !important;
   }
+
+  .project-card-layout {
+    flex-direction: column !important;
+  }
+  
+  .project-video-preview {
+    order: 2 !important;
+  }
+  
+  .project-text-content {
+    order: 1 !important;
+  }
+  
+  .project-modal {
+    left: 0 !important;
+    top: 0 !important;
+    transform: translate(0, 0) !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    margin: 0 !important;
+  }
+  
+  .project-modal .xp-content {
+    max-height: calc(100vh - 32px) !important;
+  }
 }
 
 @keyframes float {
