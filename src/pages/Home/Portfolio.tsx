@@ -197,7 +197,7 @@ const Portfolio: React.FC = () => {
                   <p className="text-gray-600 text-m italic">{portfolioData.tagline}</p>
                 </div>
                 <p className="text-primary text-2xl underline font-mono">About Me</p>
-
+                <p className="text-gray-700 text-2xl underline font-mono"> - Currently Attending the University of Waterloo</p>
                 <div className="mt-auto grid grid-cols-1 md:grid-cols-2 gap-4">
                   {portfolioData.menuItems.map((item, index) => (
                     <MenuButton
