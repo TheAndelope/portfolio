@@ -196,8 +196,10 @@ const Portfolio: React.FC = () => {
                   <p className="text-gray-700 text-m font-mono">{portfolioData.title}</p>
                   <p className="text-gray-600 text-m italic">{portfolioData.tagline}</p>
                 </div>
-                <p className="text-primary text-2xl underline font-mono">About Me</p>
-                <p className="text-gray-700 text-2xl underline font-mono"> - Currently Attending the University of Waterloo</p>
+                <p className="text-primary text-2xl underline font-mono">about me</p>
+                <p className="text-gray-700 text-m font-mono"> - studying mathematics @ the university of waterloo</p>
+                <p className="text-gray-700 text-m font-mono"> - epsilon high — active in Kaggle and reinforcement learning competitons</p>
+                <p className="text-gray-700 text-m font-mono"> - architecting food in free time</p>
                 <div className="mt-auto grid grid-cols-1 md:grid-cols-2 gap-4">
                   {portfolioData.menuItems.map((item, index) => (
                     <MenuButton
