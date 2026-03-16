@@ -2,7 +2,7 @@ export const projectsData = {
   projects: [
     {
       title: "guideline",
-      description: "an augmented reality tool for breadboards",
+      description: "an augmented reality tool for breadboarding",
       technologies: ["kotlin", "opencv", "next.js", "typescript", "mongodb"],
       link: "https://dorahacks.io/buidl/26350"
     },
