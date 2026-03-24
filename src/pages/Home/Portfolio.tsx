@@ -12,7 +12,7 @@ import '../../styles/globals.css';
 const Toolbar: React.FC<{ onMinesweeper: () => void }> = ({ //onMinesweeper
   }) => (
   <div className="xp-toolbar">
-    <a className="xp-toolbar-btn" href="mailto:andy@uwaterloo.ca">
+    <a className="xp-toolbar-btn" href="mailto:hi@andyduong.dev">
       <span>✉</span> email
     </a>
     <div className="xp-toolbar-sep" />
