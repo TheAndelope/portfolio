@@ -7,63 +7,80 @@ interface ProjectCardProps {
   onClick: () => void;
 }
 
-export const ProjectCard: React.FC<ProjectCardProps> = ({ 
-  project,
-  onClick 
-}) => {
+export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
   return (
-    <div 
+    <div
       onClick={onClick}
-      className="p-4 border-2 border-gray-400 bg-white transition-all duration-300 cursor-pointer hover:bg-gray-50"
-      style={{ 
-        boxShadow: 'inset -1px -1px 0px rgba(0,0,0,0.1), inset 1px 1px 0px rgba(255,255,255,0.8), 2px 2px 4px rgba(0,0,0,0.2)'
+      style={{
+        background: '#fff',
+        border: '2px solid #919b9c',
+        padding: 12,
+        cursor: 'pointer',
+        boxShadow: 'inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px grey, inset 2px 2px #dfdfdf',
       }}
     >
-      <div className="flex gap-4 project-card-layout">
-        <div className="flex-1 project-text-content">   
-          <h3 className="text-lg font-bold mb-2 text-gray-800">{project.title}</h3>
-          <p className="text-gray-700 mb-3">{project.description}</p>
+      <div className="project-card-layout">
+        {/* Text */}
+        <div className="project-text-content" style={{ flex: 1 }}>
+          <h3 style={{ margin: '0 0 6px', fontSize: 13, fontWeight: 700, color: '#222', fontFamily: "'Pixelated MS Sans Serif', Arial" }}>
+            {project.title}
+          </h3>
+          <p style={{ margin: '0 0 8px', fontSize: 11, color: '#444', fontFamily: "'Pixelated MS Sans Serif', Arial", lineHeight: 1.5 }}>
+            {project.description}
+          </p>
           {project.technologies && (
-            <div className="flex flex-wrap gap-2 mb-3">
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
               {project.technologies.map((tech, i) => (
-                <span key={i} className="text-xs px-2 py-1 bg-blue-100 border border-blue-300 text-blue-800">
+                <span
+                  key={i}
+                  style={{
+                    fontSize: 10,
+                    padding: '1px 5px',
+                    background: '#dbeafe',
+                    border: '1px solid #93c5fd',
+                    color: '#1e40af',
+                    fontFamily: "'Pixelated MS Sans Serif', Arial",
+                  }}
+                >
                   {tech}
                 </span>
               ))}
             </div>
           )}
         </div>
-        
-        <div 
-          className="border-2 border-gray-400 bg-white overflow-hidden flex-shrink-0 project-video-preview"
+
+        {/* Preview thumbnail */}
+        <div
+          className="project-video-preview"
           style={{
-            width: '280px',
-            height: '200px',
-            boxShadow: 'inset -1px -1px 0px rgba(0,0,0,0.1), inset 1px 1px 0px rgba(255,255,255,0.8)'
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'linear-gradient(135deg, #dbeafe, #f3f4f6)',
           }}
         >
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-gray-100">
-            <div className="text-center">
-              <div className="text-5xl mb-2">🎨</div>
-              <div className="text-xs font-mono text-gray-600">Project Preview</div>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: 40, marginBottom: 4 }}>🎨</div>
+            <div style={{ fontSize: 10, fontFamily: "'Pixelated MS Sans Serif', Arial", color: '#666' }}>
+              Project Preview
             </div>
           </div>
         </div>
-        
       </div>
-        <div className="pt-4">
-            {project.link && (
-                    <a 
-                    href={project.link} 
-                    className="text-sm text-blue-600 hover:underline"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    >
-                    View Project →
-                    </a>
-                )}
-          </div>
+
+      {project.link && (
+        <div style={{ paddingTop: 8, borderTop: '1px solid #d4d0c8', marginTop: 8 }}>
+          <a
+            href={project.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={e => e.stopPropagation()}
+            style={{ fontSize: 11, color: '#0000ff', fontFamily: "'Pixelated MS Sans Serif', Arial" }}
+          >
+            View Project →
+          </a>
+        </div>
+      )}
     </div>
   );
 };

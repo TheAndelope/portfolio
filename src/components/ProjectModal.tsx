@@ -1,6 +1,7 @@
 import React from 'react';
-import { Project } from '../types';
+import { Window } from 'react-windows-xp';
 import { useDraggable } from '../hooks/useDraggable';
+import { Project } from '../types';
 
 interface ProjectModalProps {
   project: Project;
@@ -8,92 +9,109 @@ interface ProjectModalProps {
 }
 
 export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
-  const [modalRef, isDragging] = useDraggable<HTMLDivElement>({ 
-    handleSelector: '.xp-title-bar',
+  const [modalRef, isDragging] = useDraggable<HTMLDivElement>({
+    handleSelector: '.title-bar',
     initialX: -350,
-    initialY: -300
+    initialY: -300,
   });
 
   return (
     <>
-      <div 
+      <div
         className="fixed inset-0 bg-black/30 z-50"
+        style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 50 }}
         onClick={onClose}
       />
-      
-      <div 
+
+      <div
         ref={modalRef}
-        className="fixed z-50 xp-window project-modal"
+        className="project-modal"
         style={{
+          position: 'fixed',
+          zIndex: 51,
           left: '50%',
           top: '50%',
           transform: 'translate(-50%, -50%)',
-          width: '700px',
-          maxHeight: '600px',
-          cursor: isDragging ? 'grabbing' : 'default'
+          width: 700,
+          maxHeight: 600,
+          cursor: isDragging ? 'grabbing' : 'default',
+          display: 'inline-block',
         }}
       >
-        <div className="xp-title-bar cursor-grab active:cursor-grabbing">
-          <div className="flex items-center gap-2">
-            <div className="text-white font-bold text-sm">{project.title}</div>
-          </div>
-          <button 
-            className="xp-close-button" 
-            onClick={(e) => {
-              e.stopPropagation();
-              onClose();
-            }}
-          >
-            ✕
-          </button>
-        </div>
-        
-        <div className="xp-content p-6 overflow-y-auto" style={{ maxHeight: '540px' }}>
-          <div className="mb-4 border-2 border-gray-400 bg-white overflow-hidden">
-            <div className="w-full h-80 flex items-center justify-center bg-gradient-to-br from-blue-50 to-gray-100">
-              <div className="text-center">
-                <div className="text-8xl mb-3">🎨</div>
-                <div className="text-sm font-mono text-gray-600">Full Project Preview</div>
+        <Window
+          title={project.title}
+          showClose
+          onClose={onClose}
+          style={{ width: '100%' }}
+        >
+          <div className="window-body" style={{ overflowY: 'auto', maxHeight: 540 }}>
+            {/* Preview area */}
+            <div
+              style={{
+                width: '100%',
+                height: 240,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'linear-gradient(135deg, #dbeafe, #f3f4f6)',
+                border: '1px solid #7f9db9',
+                marginBottom: 12,
+              }}
+            >
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: 64, marginBottom: 8 }}>🎨</div>
+                <div style={{ fontSize: 11, fontFamily: "'Pixelated MS Sans Serif', Arial", color: '#666' }}>
+                  Full Project Preview
+                </div>
               </div>
             </div>
-          </div>
-          
-          <div className="space-y-4">
-            <div>
-              <h3 className="text-xl font-bold mb-2 text-gray-800">{project.title}</h3>
-              <p className="text-gray-700">{project.description}</p>
-            </div>
-            
+
+            <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 6, color: '#222' }}>
+              {project.title}
+            </h3>
+            <p style={{ fontSize: 11, color: '#444', marginBottom: 10, fontFamily: "'Pixelated MS Sans Serif', Arial" }}>
+              {project.description}
+            </p>
+
             {project.technologies && (
-              <div>
-                <h4 className="font-bold mb-2 text-gray-800">Technologies:</h4>
-                <div className="flex flex-wrap gap-2">
+              <div style={{ marginBottom: 12 }}>
+                <strong style={{ fontSize: 11, fontFamily: "'Pixelated MS Sans Serif', Arial" }}>
+                  Technologies:
+                </strong>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginTop: 4 }}>
                   {project.technologies.map((tech, i) => (
-                    <span key={i} className="text-xs px-3 py-1 bg-blue-100 border border-blue-300 text-blue-800">
+                    <span
+                      key={i}
+                      style={{
+                        fontSize: 10,
+                        padding: '2px 6px',
+                        background: '#dbeafe',
+                        border: '1px solid #93c5fd',
+                        color: '#1e40af',
+                        fontFamily: "'Pixelated MS Sans Serif', Arial",
+                      }}
+                    >
                       {tech}
                     </span>
                   ))}
                 </div>
               </div>
             )}
-            
+
             {project.link && (
-              <div className="pt-4">
-                <a 
-                  href={project.link} 
-                  className="inline-block px-4 py-2 bg-blue-500 text-white border border-blue-700 hover:bg-blue-600"
+              <div style={{ paddingTop: 8 }}>
+                <a
+                  href={project.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{
-                    boxShadow: 'inset -1px -1px 0px rgba(0,0,0,0.2), inset 1px 1px 0px rgba(255,255,255,0.3)'
-                  }}
+                  style={{ color: '#0000ff', fontSize: 11, fontFamily: "'Pixelated MS Sans Serif', Arial" }}
                 >
                   Visit Project →
                 </a>
               </div>
             )}
           </div>
-        </div>
+        </Window>
       </div>
     </>
   );

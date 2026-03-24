@@ -3,6 +3,7 @@ export interface Project {
   description: string;
   technologies?: string[];
   link?: string;
+  video?: string;
 }
 
 export interface MenuItem {
@@ -15,7 +16,5 @@ export interface MenuItem {
 export interface PortfolioData {
   name: string;
   title: string;
-  tagline: string;
-  location: string;
   menuItems: MenuItem[];
 }

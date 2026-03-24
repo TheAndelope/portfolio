@@ -1,298 +1,348 @@
-import React, { useState, useEffect } from 'react';
-import { useDraggable } from '../../hooks/useDraggable';
+import React, { useState, useEffect, useRef } from 'react';
 import { Project } from '../../types';
 import { portfolioData } from '../../data/portfolio';
 import { projectsData } from '../../data/projects';
 import { ProfileCard } from '../../components/ProfileCard';
 import { FloatingImageCard } from '../../components/FloatingImageCard';
 import { MenuButton } from '../../components/MenuButton';
-import { ProjectCard } from '../../components/ProjectCard';
-import { ProjectModal } from '../../components/ProjectModal';
+import { ProjectsWindow } from '../../components/ProjectsWindow';
+import { XPWindow } from '../../components/XPWindow';
 import '../../styles/globals.css';
 
+const Toolbar: React.FC<{ onMinesweeper: () => void }> = ({ onMinesweeper }) => (
+  <div className="xp-toolbar">
+    <a className="xp-toolbar-btn" href="mailto:andy@uwaterloo.ca">
+      <span>✉</span> email
+    </a>
+    <div className="xp-toolbar-sep" />
+    <a className="xp-toolbar-btn" href="https://github.com/theandelope" target="_blank" rel="noopener noreferrer">
+      <span style={{ fontWeight: 700, fontSize: 11 }}>GH</span> github
+    </a>
+    <div className="xp-toolbar-sep" />
+    <a className="xp-toolbar-btn" href="https://www.linkedin.com/in/andy--duong/" target="_blank" rel="noopener noreferrer">
+      <span style={{ fontWeight: 700, fontSize: 11, color: '#0a66c2' }}>in</span> linkedin
+    </a>
+    <div className="xp-toolbar-sep" />
+    {
+      /*
+    <button className="xp-toolbar-btn" onClick={onMinesweeper}>
+      <span></span> minesweeper
+    </button>
+    */
+    }
+  </div>
+);
+
 const Portfolio: React.FC = () => {
-  const [selectedMenu, setSelectedMenu] = useState<string | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [subWindows, setSubWindows] = useState<{ id: string; offset: number }[]>([]);
+  const windowCountRef = useRef(0);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [projects] = useState<Project[]>(projectsData.projects);
   const [randomImages, setRandomImages] = useState<number[]>([]);
-  const [expandedProject, setExpandedProject] = useState<number | null>(null);
   const [visibleFloatingCards, setVisibleFloatingCards] = useState<number[]>([]);
   const [mainWindowVisible, setMainWindowVisible] = useState(true);
+  const [projectsWindowOpen, setProjectsWindowOpen] = useState(false);
+  const [projectsCloseReq, setProjectsCloseReq] = useState(0);
+  const [minesweeperOpen, setMinesweeperOpen] = useState(false);
 
-  const handleCloseActiveWindow = (e?: React.MouseEvent) => {
-    e?.stopPropagation();
+  // Unified global z-order for all windows
+  const [globalZOrder, setGlobalZOrder] = useState<string[]>([
+    'floating-0',
+    'floating-1',
+    'floating-2',
+    'floating-3',
+    'floating-4',
+    'profile',
+    'main',
+  ]);
+
+  const bringToFront = (id: string) =>
+    setGlobalZOrder(prev => [...prev.filter(w => w !== id), id]);
+
+  const getZ = (id: string) => 10 + globalZOrder.indexOf(id);
+
+  const openSubWindow = (id: string) => {
+    if (subWindows.some(w => w.id === id)) {
+      bringToFront(id);
+      return;
+    }
+    const offset = (windowCountRef.current % 6) * 24;
+    windowCountRef.current++;
+    setSubWindows(prev => [...prev, { id, offset }]);
+    setGlobalZOrder(prev => [...prev.filter(w => w !== id), id]);
+  };
+
+  const closeSubWindow = (id: string) => {
+    setSubWindows(prev => prev.filter(w => w.id !== id));
+    setGlobalZOrder(prev => prev.filter(w => w !== id));
+  };
+
+  const handleCloseActiveWindow = () => {
     const isMobile = window.innerWidth <= 768;
-    if (expandedProject !== null) {
-      setExpandedProject(null)
-    } else if (selectedMenu !== null) {
-      setSelectedMenu(null);
+    if (projectsWindowOpen) {
+      setProjectsCloseReq(r => r + 1);
+    } else if (subWindows.length > 0) {
+      // Close the topmost sub-window based on globalZOrder
+      const subIds = subWindows.map(w => w.id);
+      const topmost = [...globalZOrder].reverse().find(id => subIds.includes(id));
+      if (topmost) closeSubWindow(topmost);
     } else if (!isMobile) {
       setMainWindowVisible(false);
-    };
-  }
-
-
-  const [mainCardRef, isDraggingMain] = useDraggable<HTMLDivElement>({
-    handleSelector: '.xp-title-bar'
-  });
+    }
+  };
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'x' || e.key === 'X') {
-        if (expandedProject !== null) {
-          setExpandedProject(null);
-        } else if (selectedMenu !== null) {
-          setSelectedMenu(null);
+        if (projectsWindowOpen) {
+          setProjectsCloseReq(r => r + 1);
+        } else if (subWindows.length > 0) {
+          const subIds = subWindows.map(w => w.id);
+          const topmost = [...globalZOrder].reverse().find(id => subIds.includes(id));
+          if (topmost) closeSubWindow(topmost);
         }
       }
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [selectedMenu, expandedProject]);
+  }, [globalZOrder, subWindows, projectsWindowOpen]);
 
   useEffect(() => {
-    setIsLoaded(true);
-
     const totalImages = 10;
-    const imageNumbers = Array.from({ length: totalImages }, (_, i) => i + 1);
-    const shuffled = imageNumbers.sort(() => Math.random() - 0.5);
+    const shuffled = Array.from({ length: totalImages }, (_, i) => i + 1).sort(() => Math.random() - 0.5);
     setRandomImages(shuffled.slice(0, 5));
     setVisibleFloatingCards([0, 1, 2, 3, 4]);
   }, []);
 
   const handleCloseFloatingCard = (index: number) => {
     setVisibleFloatingCards(prev => prev.filter(i => i !== index));
+    setGlobalZOrder(prev => prev.filter(id => id !== `floating-${index}`));
   };
 
-  const getMenuContent = () => {
-    const item = portfolioData.menuItems.find(m => m.id === selectedMenu);
+  const handleMenuClick = (id: string) => {
+    if (id === 'projects') {
+      setProjectsWindowOpen(true);
+      setGlobalZOrder(prev => [...prev.filter(w => w !== 'projects'), 'projects']);
+    } else {
+      openSubWindow(id);
+    }
+  };
+
+  const getWindowContent = (menuId: string) => {
+    const item = portfolioData.menuItems.find(m => m.id === menuId);
     if (!item) return null;
 
-    if (selectedMenu === 'projects') {
-      return (
-        <div className="space-y-6">
-          {projects.map((project, index) => (
-            <ProjectCard
-              key={index}
-              project={project}
-              index={index}
-              onClick={() => setExpandedProject(index)}
-            />
-          ))}
-
-          {expandedProject !== null && (
-            <ProjectModal
-              project={projects[expandedProject]}
-              onClose={() => setExpandedProject(null)}
-            />
-          )}
-        </div>
-      );
-    }
-
-    if (Array.isArray(item.content)) {
-      return (
-        <div className="space-y-3">
-          {item.content.map((line, index) => (
-            <div
-              key={index}
-              className="flex items-start"
-            >
-              <span className="text-blue-600 mr-3 mt-1">▸</span>
-              <span className="flex-1">{line}</span>
-            </div>
-          ))}
-        </div>
-      );
-    }
+    const body = Array.isArray(item.content) ? (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {item.content.map((line, index) => (
+          <div key={index} style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+            <span style={{ color: '#0000ff' }}>▸</span>
+            <span style={{ flex: 1, fontSize: 14 }}>{line}</span>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p style={{ fontSize: 14, lineHeight: 1.6 }}>{item.content}</p>
+    );
 
     return (
-      <p className="leading-relaxed">
-        {item.content}
-      </p>
+      <>
+        {body}
+        {menuId === 'contact' && (
+          <div style={{ marginTop: 16, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <a href="/resume.pdf" target="_blank" rel="noopener noreferrer">
+              <button>Download Resume</button>
+            </a>
+            <button onClick={() => { closeSubWindow('contact'); setProjectsWindowOpen(true); }}>
+              View Projects
+            </button>
+          </div>
+        )}
+      </>
     );
   };
 
   const floatingCards = [
-    { top: '10vh', right: 'clamp(10px, 4vw, 150px)', width: 'clamp(200px, 20vw, 320px)', rotation: '', animation: 'float 6s ease-in-out infinite' },
-    { top: '20vh', left: 'clamp(10px, 3vw, 8vw)', width: 'clamp(180px, 18vw, 280px)', rotation: '', animation: 'float2 7s ease-in-out infinite', delay: '1s' },
-    { bottom: '8vh', right: 'clamp(10px, 8vw, 25vw)', width: 'clamp(220px, 22vw, 360px)', rotation: '', animation: 'float3 5.5s ease-in-out infinite', delay: '0.5s' },
-    { bottom: '25vh', right: 'clamp(10px, 2vw, 12vw)', width: 'clamp(190px, 19vw, 300px)', rotation: '', animation: 'float 6.5s ease-in-out infinite', delay: '1.5s' },
-    { bottom: '18vh', left: 'clamp(10px, 4vw, 18vw)', width: 'clamp(200px, 20vw, 320px)', rotation: '', animation: 'float2 6.8s ease-in-out infinite', delay: '0.8s' }
-  ];
+    { top: '10vh',    right: 'clamp(10px, 4vw, 150px)', width: 'clamp(200px, 20vw, 320px)', animation: 'float 6s ease-in-out infinite' },
+    { top: '20vh',    left:  'clamp(10px, 3vw, 8vw)',   width: 'clamp(180px, 18vw, 280px)', animation: 'float2 7s ease-in-out infinite',   delay: '1s' },
+    { bottom: '8vh',  right: 'clamp(10px, 8vw, 25vw)',  width: 'clamp(220px, 22vw, 360px)', animation: 'float3 5.5s ease-in-out infinite',  delay: '0.5s' },
+    { bottom: '25vh', right: 'clamp(10px, 2vw, 12vw)',  width: 'clamp(190px, 19vw, 300px)', animation: 'float 6.5s ease-in-out infinite',   delay: '1.5s' },
+    { bottom: '18vh', left:  'clamp(10px, 4vw, 18vw)',  width: 'clamp(200px, 20vw, 320px)', animation: 'float2 6.8s ease-in-out infinite',  delay: '0.8s' },
+  ] as const;
+
 
   return (
-    <>
+    <div
+      className="grid-bg"
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 16,
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Profile card — pinned top-left */}
+      <ProfileCard
+        zIndex={getZ('profile')}
+        onFocus={() => bringToFront('profile')}
+      />
 
-      <div className="min-h-screen bg-[#F5F5DC] grid-bg flex items-center justify-center p-4 relative overflow-hidden">
-        <div onClick={() => {
-          window.location.href = 'https://andyduong.dev';
-        }}
-          className="cursor-pointer">
-          <ProfileCard />
-        </div>
+      {/* Decorative blurs */}
+      <div style={{ position: 'absolute', top: 80, left: 80, width: 256, height: 256, background: 'rgba(217,119,6,0.2)', borderRadius: '50%', filter: 'blur(48px)', animation: 'float 6s ease-in-out infinite' }} />
+      <div style={{ position: 'absolute', bottom: 80, right: 80, width: 384, height: 384, background: 'rgba(120,113,108,0.2)', borderRadius: '50%', filter: 'blur(48px)', animation: 'float 6s ease-in-out infinite', animationDelay: '2s' }} />
 
-        {/* Floating decorative elements */}
-        <div className="absolute top-20 left-20 w-64 h-64 bg-amber-300/20 rounded-full blur-3xl"
-          style={{ animation: 'float 6s ease-in-out infinite' }}></div>
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-stone-400/20 rounded-full blur-3xl"
-          style={{ animation: 'float 6s ease-in-out infinite', animationDelay: '2s' }}></div>
+      {/* Floating image windows */}
+      {randomImages.length > 0 && floatingCards.map((card, idx) =>
+        visibleFloatingCards.includes(idx) ? (
+          <FloatingImageCard
+            key={idx}
+            imageNumber={randomImages[idx]}
+            label=""
+            onClose={() => handleCloseFloatingCard(idx)}
+            onFocus={() => bringToFront(`floating-${idx}`)}
+            style={{
+              position: 'fixed',
+              top: (card as any).top,
+              bottom: (card as any).bottom,
+              left: (card as any).left,
+              right: (card as any).right,
+              width: card.width,
+              zIndex: getZ(`floating-${idx}`),
+              animation: card.animation,
+              animationDelay: (card as any).delay,
+              animationFillMode: 'backwards',
+            }}
+          />
+        ) : null
+      )}
 
-        {/* Floating Image Cards */}
-        {randomImages.length > 0 && floatingCards.map((card, idx) => (
-          visibleFloatingCards.includes(idx) && (
-            <FloatingImageCard
-              key={idx}
-              imageNumber={randomImages[idx]}
-              label={""}
-              onClose={() => handleCloseFloatingCard(idx)}
-              style={{
-                top: card.top,
-                bottom: card.bottom,
-                left: card.left,
-                right: card.right,
-                width: card.width,
-                transform: card.rotation,
-                zIndex: 5,
-                animation: card.animation,
-                animationDelay: card.delay
-              }}
-            />
-          )
-        ))}
+      {/* Main portfolio window */}
+      {mainWindowVisible && (
+        <XPWindow
+          title={`portfolio`}
+          onClose={handleCloseActiveWindow}
+          onMouseDown={() => bringToFront('main')}
+          skipOpenAnimation
+          scrollable
+          resizable
+          icon="portfolio.ico"
+          toolbar={<Toolbar onMinesweeper={() => { setMinesweeperOpen(true); bringToFront('minesweeper'); }} />}
+          className="main-window-wrapper"
+          style={{
+            width: 'clamp(360px, 55vw, 780px)',
+            zIndex: getZ('main'),
+            position: 'relative',
+          }}
+          bodyStyle={{
+            maxHeight: 'clamp(340px, 65vh, 640px)',
+          }}
+        >
+          <h4 style={{ margin: '0 0 6px', fontSize: 30, color: '#003c74' }}>
+            Andy Duong
+          </h4>
+          <p style={{ margin: '0 0 18px', fontSize: 18, color: '#555' }}>
+            {portfolioData.title}
+          </p>
 
-        {/* Main Card */}
-        {mainWindowVisible && (
-          selectedMenu === null ? (
-            <div
-              ref={mainCardRef}
-              className={`xp-window max-w-4xl w-full z-10 relative flex flex-col ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-                }`}
-              style={{
-                width: 'clamp(320px, 60vw, 900px)',
-                height: 'clamp(500px, 65vh, 700px)',
-                cursor: isDraggingMain ? 'grabbing' : 'default',
-                transition: isLoaded ? 'opacity 1s, transform 1s' : 'none'
-              }}
-            >
+          <p style={{ margin: '0 0 10px', fontSize: 17, textDecoration: 'underline', color: '#222' }}>
+            about me
+          </p>
 
-              <div className="xp-title-bar cursor-grab active:cursor-grabbing">
-                <div className="text-white font-bold text-sm flex items-center gap-2">
-                  <span>💼</span>
-                  {portfolioData.name} - portfolio
-                </div>
-                <button
-                  className="xp-close-button"
-                  onClick={handleCloseActiveWindow}
-                >
-                  ✕
-                </button>
-              </div>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+    <span style={{ fontSize: 18, color: '#555' }}>- studying math @ university of waterloo</span>
+    <img src="/images/uw.avif" alt="UW" style={{ width: 20, height: 20, objectFit: 'contain', flexShrink: 0 }} />
+  </div>
+  <div style={{ marginBottom: 6 }}>
+    <span style={{ fontSize: 18, color: '#555' }}>- into kaggle and rl competitions</span>
+  </div>
+  <div style={{ marginBottom: 6 }}>
+    <span style={{ fontSize: 18, color: '#555' }}>- exploring computer architecture and fpga development</span>
+  </div>
+  <div style={{ marginBottom: 22 }}>
+    <span style={{ fontSize: 18, color: '#555' }}>- i also cook a lot</span>
+  </div>
 
-              <div className="p-8 xp-content flex flex-col flex-1 overflow-y-auto">
-                <h4 className="text-primary text-2xl font-mono text-left">andy duong</h4>
-                <div className="mb-6 space-y-1">
-                  <p className="text-gray-700 text-m font-mono">{portfolioData.title}</p>
-                  <p className="text-gray-600 text-m italic">{portfolioData.tagline}</p>
-                </div>
-                <p className="text-primary text-2xl underline font-mono">about me</p>
-                <p className="text-gray-700 text-m font-mono"> - studying mathematics @ the university of waterloo</p>
-                <p className="text-gray-700 text-m font-mono"> - epsilon high — active in Kaggle and reinforcement learning competitons</p>
-                <p className="text-gray-700 text-m font-mono"> - architecting food in free time</p>
-                <div className="mt-auto grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {portfolioData.menuItems.map((item, index) => (
-                    <MenuButton
-                      key={item.id}
-                      item={item}
-                      index={index}
-                      isHovered={hoveredItem === item.id}
-                      onHover={() => setHoveredItem(item.id)}
-                      onLeave={() => setHoveredItem(null)}
-                      onClick={() => setSelectedMenu(item.id)}
-                    />
-                  ))}
-                </div>
-              </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            {portfolioData.menuItems.map((item, index) => (
+              <MenuButton
+                key={item.id}
+                item={item}
+                index={index}
+                isHovered={hoveredItem === item.id}
+                onHover={() => setHoveredItem(item.id)}
+                onLeave={() => setHoveredItem(null)}
+                onClick={() => handleMenuClick(item.id)}
+              />
+            ))}
+          </div>
+        </XPWindow>
+      )}
 
-              <div className="border-t-2 border-gray-400 bg-gray-200 flex-shrink-0">
-                <div className="p-6">
-                  <div className="text-xs text-gray-700 space-y-2 font-mono">
-                    <div className="flex items-center">
-                      <span className="text-green-600 mr-2">●</span>
-                      <span>available for work (seeking summer '26 internships)</span>
-                    </div>
-                    <div className="flex items-center">
-                      <span className="text-gray-700 mr-2">&gt;</span>
-                      <span>{portfolioData.location}</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="border-t-2 border-gray-400 p-4 bg-gray-300">
-                  <div className="flex items-center justify-between text-xs font-mono text-gray-700">
-                    <span>Click any menu item to view details</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div
-              ref={mainCardRef}
-              className="xp-window max-w-4xl w-full opacity-100 scale-100 z-10 relative flex flex-col"
-              style={{
-                height: '700px',
-                cursor: isDraggingMain ? 'grabbing' : 'default'
-              }}
-            >
+      {/* Sub-menu windows */}
+      {subWindows.map(({ id, offset }) => (
+        <XPWindow
+          key={id}
+          title={portfolioData.menuItems.find(m => m.id === id)?.label ?? ''}
+          onClose={() => closeSubWindow(id)}
+          onMouseDown={() => bringToFront(id)}
+          scrollable
+          resizable
+          icon={`${id.replace(/\s+/g, '-')}.ico`}
+          style={{
+            position: 'fixed',
+            top: `calc(15vh + ${offset}px)`,
+            left: `calc(50vw - 220px + ${offset}px)`,
+            width: 'clamp(280px, 38vw, 440px)',
+            zIndex: getZ(id),
+          }}
+          bodyStyle={{ maxHeight: 'clamp(180px, 50vh, 400px)' }}
+        >
+          {getWindowContent(id)}
+        </XPWindow>
+      ))}
 
-              <div className="xp-title-bar cursor-grab active:cursor-grabbing">
-                <div className="text-white font-bold text-sm flex items-center gap-2">
-                  <span>📄</span>
-                  {portfolioData.menuItems.find(m => m.id === selectedMenu)?.label} - {portfolioData.name}
-                </div>
-                <button
-                  className="xp-close-button"
-                  onClick={handleCloseActiveWindow}
-                >
-                  ✕
-                </button>
-              </div>
+      {/* Minesweeper window */}
+      {minesweeperOpen && (
+        <XPWindow
+          title="minesweeper"
+          icon="minesweeper.ico"
+          onClose={() => { setMinesweeperOpen(false); setGlobalZOrder(prev => prev.filter(w => w !== 'minesweeper')); }}
+          onMouseDown={() => bringToFront('minesweeper')}
+          resizable
+          style={{
+            position: 'fixed',
+            top: '8vh',
+            left: 'calc(50vw - 260px)',
+            width: 520,
+            zIndex: getZ('minesweeper'),
+          }}
+          bodyStyle={{ padding: 0 }}
+        >
+          {/* Crop ~36px off the top to hide the iframe's own XP title bar */}
+          <div style={{ overflow: 'hidden', height: 500 }}>
 
-              <div className="xp-content p-8 flex-1 overflow-y-auto">
-                <div className="text-gray-900 font-mono text-sm leading-relaxed">
-                  {getMenuContent()}
-                </div>
+          </div>
+        </XPWindow>
+      )}
 
-                {selectedMenu === 'contact' && (
-                  <div className="mt-8 flex flex-wrap gap-3">
-                    <button className="px-5 py-2 bg-blue-500 text-white border border-blue-700 text-sm font-medium transition-all duration-200 hover:bg-blue-600"
-                      style={{
-                        boxShadow: 'inset -1px -1px 0px rgba(0,0,0,0.2), inset 1px 1px 0px rgba(255,255,255,0.3)'
-                      }}>
-                      Download Resume
-                    </button>
-                    <button className="px-5 py-2 border-2 border-gray-400 bg-white text-gray-800 hover:bg-gray-100 text-sm font-medium transition-all duration-200"
-                      style={{
-                        boxShadow: 'inset -1px -1px 0px rgba(0,0,0,0.1), inset 1px 1px 0px rgba(255,255,255,0.8)'
-                      }}>
-                      View Projects
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              <div className="border-t-2 border-gray-400 p-4 bg-gray-200 flex-shrink-0">
-                <div className="flex items-center justify-between text-xs font-mono text-gray-700">
-                  <span>Click X to return to menu</span>
-                  <span className="flex items-center gap-2">
-                  </span>
-                </div>
-              </div>
-            </div>
-          )
-        )}
-      </div>
-    </>
+      {/* Projects window */}
+      {projectsWindowOpen && (
+        <ProjectsWindow
+          projects={projects}
+          onClose={() => {
+            setProjectsWindowOpen(false);
+            setProjectsCloseReq(0);
+            setGlobalZOrder(prev => prev.filter(w => w !== 'projects'));
+          }}
+          closeRequest={projectsCloseReq}
+          onFocus={() => bringToFront('projects')}
+          zIndex={getZ('projects')}
+        />
+      )}
+    </div>
   );
 };
 

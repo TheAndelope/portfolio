@@ -6,10 +6,10 @@ interface DragOptions {
   handleSelector?: string;
 }
 
-export const useDraggable = <T extends HTMLElement>({ 
-  initialX = 0, 
+export const useDraggable = <T extends HTMLElement>({
+  initialX = 0,
   initialY = 0,
-  handleSelector 
+  handleSelector,
 }: DragOptions = {}): [RefObject<T>, boolean] => {
   const elementRef = useRef<T>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -20,7 +20,7 @@ export const useDraggable = <T extends HTMLElement>({
 
     element.style.transform = `translate3d(${initialX}px, ${initialY}px, 0)`;
     element.style.willChange = 'transform';
-    
+
     let active = false;
     let startX = 0;
     let startY = 0;
@@ -32,13 +32,23 @@ export const useDraggable = <T extends HTMLElement>({
         return;
       }
 
+      // Read the ACTUAL visual position from the computed transform matrix.
+      // This is critical when a CSS animation is also driving transform — without
+      // this the element snaps back to the initialX/Y origin on first move.
+      const computed = window.getComputedStyle(element).transform;
+      if (computed && computed !== 'none') {
+        const matrix = new DOMMatrix(computed);
+        currentX = matrix.m41;
+        currentY = matrix.m42;
+      }
+
       active = true;
       startX = e.clientX - currentX;
       startY = e.clientY - currentY;
-      
+
       element.style.transition = 'none';
       element.classList.add('dragging');
-      
+
       setIsDragging(true);
       e.preventDefault();
       e.stopPropagation();
@@ -46,22 +56,21 @@ export const useDraggable = <T extends HTMLElement>({
 
     const onMouseMove = (e: MouseEvent) => {
       if (!active) return;
-      
       e.preventDefault();
-      
+
       currentX = e.clientX - startX;
       currentY = e.clientY - startY;
-      
+
       element.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
     };
 
     const onMouseUp = () => {
       if (!active) return;
       active = false;
-      
+
       element.style.transition = '';
       element.classList.remove('dragging');
-      
+
       setIsDragging(false);
     };
 

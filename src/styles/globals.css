@@ -1,116 +1,215 @@
-@media (max-width: 768px) {
-  .floating-card,
-  .profile-card {
-    display: none !important;
-  }
-  
-  .xp-window {
-    width: 100vw !important;
-    height: 100vh !important;
-    max-width: 100vw !important;
-    max-height: 100vh !important;
-    margin: 0 !important;
-    border-radius: 0 !important;
-  }
+/* ─────────────────────────────────────────────────────────────────────────────
+   react-windows-xp / xp.css overrides + project-specific styles
+   ───────────────────────────────────────────────────────────────────────────── */
 
-  .project-card-layout {
-    flex-direction: column !important;
-  }
-  
-  .project-video-preview {
-    order: 2 !important;
-  }
-  
-  .project-text-content {
-    order: 1 !important;
-  }
-  
-  .project-modal {
-    left: 0 !important;
-    top: 0 !important;
-    transform: translate(0, 0) !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    max-height: 100vh !important;
-    margin: 0 !important;
-  }
-  
-  .project-modal .xp-content {
-    max-height: calc(100vh - 32px) !important;
-  }
+/* Global font */
+* {
+  font-family: Tahoma, 'MS Sans Serif', Arial, sans-serif;
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(3deg); }
-  50% { transform: translateY(-20px) rotate(3deg); }
+/* ── Window colour + border overrides ────────────────────────────────────── */
+/*
+  Strategy: replace the inset box-shadow border (which lives inside the element
+  and gets covered by children) with OUTER box-shadow layers.
+  Outer shadows are painted outside the element boundary — no child div can
+  ever cover them, so the border is always visible regardless of margin/padding.
+  We keep the original inset shadows too for the title-bar 3D depth effect.
+*/
+
+
+.window {
+  background: #ffffff !important;
+  padding: 0 !important;
+  box-shadow:
+    /* Outer border — 3 layers for XP-style blue depth, always visible */
+    0 0 0 1px #0831d9,
+    0 0 0 2px #001ea0,
+    0 0 0 3px #00138c,
+    /* Original inset shadows kept for title-bar depth effect */
+    inset -1px -1px #00138c,
+    inset  1px  1px #0831d9,
+    inset -2px -2px #001ea0,
+    inset  2px  2px #166aee,
+    inset -3px -3px #003bda,
+    inset  3px  3px #0055dd !important;
+}
+/* margin:0 is now safe — border comes from outer shadow, not the margin gap */
+.window > .window-body {
+  background: #ffffff !important;
+  margin: 0 !important;
 }
 
-@keyframes float2 {
-  0%, 100% { transform: translateY(0px) rotate(6deg); }
-  50% { transform: translateY(-25px) rotate(6deg); }
+/* ── Resizable mode: flex column so content fills window height ───────────── */
+/* Applied only when bounds are active (class set dynamically by XPWindow)     */
+.xp-resizable-active .window {
+  display: flex !important;
+  flex-direction: column !important;
+}
+.xp-resizable-active .window > .window-body {
+  flex: 1 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
-@keyframes float3 {
-  0%, 100% { transform: translateY(0px) rotate(-2deg); }
-  50% { transform: translateY(-15px) rotate(-2deg); }
+
+/* ── XP-style toolbar strip ───────────────────────────────────────────────── */
+/* window-body margin is 0, so the toolbar is already flush — no negative
+   margin tricks needed. It naturally spans edge-to-edge.                   */
+.xp-toolbar {
+  background: #ece9d8;
+  border-bottom: 1px solid #a0a0a0;
+  box-shadow: inset 0 -1px 0 #ffffff;
+  padding: 2px 4px;
+  display: flex;
+  align-items: center;
+  gap: 1px;
 }
 
+.xp-toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  font-size: 12px;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  color: #222;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+.xp-toolbar-btn:hover {
+  border-color: #7f9db9;
+  background: #c1d3fb;
+  box-shadow: inset 1px 1px #ffffff, inset -1px -1px #8b8b8b;
+}
+.xp-toolbar-btn:active {
+  box-shadow: inset 1px 1px #8b8b8b, inset -1px -1px #ffffff;
+}
+
+.xp-toolbar-sep {
+  width: 1px;
+  height: 16px;
+  margin: 0 3px;
+  background: #a0a0a0;
+  box-shadow: 1px 0 0 #ffffff;
+}
+
+/* Desktop background */
 .grid-bg {
-  background-image: 
-    linear-gradient(#e3e0c8 2px, transparent 1px),
-    linear-gradient(90deg, #e3e0c8 2px, transparent 1px);
+  background-color: #F5F5DC;
+  background-image:
+    linear-gradient(#e3e0c8 1px, transparent 1px),
+    linear-gradient(90deg, #e3e0c8 1px, transparent 1px);
   background-size: 30px 30px;
 }
 
-.xp-window {
-  background: linear-gradient(180deg, #0054e3 0%, #0054E3 30px, #ECE9D8 30px);
-  border: 3px solid;
-  border-color: #0831D9 #0831D9 #001EA9 #001EA9;
-  box-shadow: 
-    inset 1px 1px 0px rgba(255, 255, 255, 0.3),
-    2px 2px 8px rgba(0, 0, 0, 0.3);
+/* ── Title bar overrides ──────────────────────────────────────────────────── */
+/* Stock XP theme: height:21px, font-size:13px, font-family:"Trebuchet MS"   */
+.title-bar {
+  height: 30px !important;
+  padding: 4px 5px 4px 6px !important;
+  box-sizing: border-box !important;
 }
 
-.xp-window.dragging {
-  transition: none !important;
-  animation: none !important;
+.title-bar,
+.title-bar-text {
+  font-size: 13px !important;
+  font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif !important;
+  -webkit-font-smoothing: none !important;
+  -moz-osx-font-smoothing: unset !important;
+  font-smooth: never !important;
 }
 
-.xp-title-bar {
-  background: linear-gradient(180deg, #0997FF 0%, #0053EE 50%, #0050EE 51%, #003DD7 100%);
-  border-bottom: 1px solid #0831D9;
-  padding: 4px 6px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+/* Scale the caption buttons to match the taller bar */
+.title-bar-controls button {
+  min-height: 22px !important;
+  min-width: 22px !important;
 }
 
-.xp-close-button {
-  width: 21px;
-  height: 21px;
-  background: linear-gradient(180deg, #FF6347 0%, #DC143C 100%);
-  border: 1px solid #8B0000;
-  border-radius: 2px;
-  display: flex;
-  align-items: center;
+/* ── Title bar icon support ───────────────────────────────────────────────── */
+/* Add class "window-has-icon" + CSS var --title-icon to the wrapper div      */
+.window-has-icon .title-bar-text {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+}
+.window-has-icon .title-bar-text::before {
+  content: '' !important;
+  display: block !important;
+  width: 20px !important;
+  height: 20px !important;
+  flex-shrink: 0 !important;
+  background-image: var(--title-icon) !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+}
+
+/* ── Window open / close animations ──────────────────────────────────────── */
+@keyframes windowOpen {
+  from { opacity: 0; transform: scale(0.88); }
+  to   { opacity: 1; transform: scale(1);    }
+}
+@keyframes windowClose {
+  from { opacity: 1; transform: scale(1);    }
+  to   { opacity: 0; transform: scale(0.88); }
+}
+
+/* ── Floating card animations ─────────────────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px)   rotate(3deg);  }
+  50%       { transform: translateY(-20px) rotate(3deg);  }
+}
+@keyframes float2 {
+  0%, 100% { transform: translateY(0px)   rotate(6deg);  }
+  50%       { transform: translateY(-25px) rotate(6deg);  }
+}
+@keyframes float3 {
+  0%, 100% { transform: translateY(0px)   rotate(-2deg); }
+  50%       { transform: translateY(-15px) rotate(-2deg); }
+}
+
+/* ── Project tile grid ────────────────────────────────────────────────────── */
+/* Tile width is fixed by viewport so exactly 3 fit when the window first
+   opens (inset:24 = vw-48px wide, minus scrollbar ~17px, padding 16px,
+   2 gaps 16px → tile = (vw - 97px) / 3).
+   auto-fill wraps to 2 then 1 column as the window is resized narrower.    */
+.project-tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, clamp(160px, calc((100vw - 100px) / 3), 600px));
   justify-content: center;
-  cursor: pointer;
-  font-weight: bold;
-  color: white;
-  font-size: 14px;
-  line-height: 1;
-  box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.4);
+  gap: 8px;
+  padding: 8px;
 }
 
-.xp-close-button:hover {
-  background: linear-gradient(180deg, #FF7F66 0%, #E6554A 100%);
-}
+/* ── Mobile overrides ─────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Kill the outer scrollbar — only the inner window scrolls */
+  html, body {
+    overflow: hidden;
+    height: 100%;
+  }
 
-.xp-close-button:active {
-  box-shadow: inset 0px 0px 2px rgba(0, 0, 0, 0.5);
-}
+  .floating-card, .profile-card { display: none !important; }
 
-.xp-content {
-  background: #ECE9D8;
-  border-top: 1px solid #FFFFFF;
+  /* Remove outer padding so window centers cleanly */
+  .grid-bg {
+    padding: 0 !important;
+    align-items: center !important;
+  }
+
+  .main-window-wrapper {
+    width:     96vw  !important;
+    max-width: 100vw !important;
+    margin:    0     !important;
+  }
+  .main-window-wrapper .window {
+    border-radius: 0 !important;
+    width: 100% !important;
+  }
+
 }

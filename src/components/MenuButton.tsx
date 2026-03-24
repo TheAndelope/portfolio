@@ -10,27 +10,38 @@ interface MenuButtonProps {
   onClick: () => void;
 }
 
-export const MenuButton: React.FC<MenuButtonProps> = ({ 
-  item, 
-  isHovered, 
-  onHover, 
-  onLeave, 
-  onClick 
+/**
+ * xp.css provides full button styling automatically — just use a plain <button>.
+ * We add a hover effect via the data-hovered attribute to show the "click to view" hint.
+ */
+export const MenuButton: React.FC<MenuButtonProps> = ({
+  item,
+  isHovered,
+  onHover,
+  onLeave,
+  onClick,
 }) => {
   return (
     <button
       onClick={onClick}
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
-      className="text-left p-6 font-mono text-sm transition-all duration-200 border-2 border-gray-400 hover:bg-blue-50 bg-white shadow-lg hover:shadow-xl"
-      style={{ 
-        boxShadow: 'inset -1px -1px 0px rgba(0,0,0,0.1), inset 1px 1px 0px rgba(255,255,255,0.8), 2px 2px 4px rgba(0,0,0,0.2)'
+      style={{
+        width: '100%',
+        minHeight: 44,
+        textAlign: 'left',
+        padding: '6px 12px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        fontFamily: 'Tahoma, Arial, sans-serif',
+        fontSize: 14,
       }}
     >
-      <span className="text-2xl mr-3 text-blue-600">{item.icon}</span>
-      <span className="text-lg font-bold text-gray-800">{item.label}</span>
+      <span style={{ fontSize: 20 }}>{item.icon}</span>
+      <span style={{ fontWeight: 700 }}>{item.label}</span>
       {isHovered && (
-        <span className="ml-2 text-xs text-gray-500">click to view</span>
+        <span style={{ marginLeft: 'auto', fontSize: 12, color: '#666' }}>click to view</span>
       )}
     </button>
   );

@@ -1,10 +1,8 @@
 import { PortfolioData } from '../types';
 
 export const portfolioData: PortfolioData = {
-  name: "andy duong",
-  title: "up-and-coming data scientist, machine learning dev",
-  tagline: "relentless by design.",
-  location: "waterloo, canada",
+  name: "Andy Duong",
+  title: "machine learning & systems programmer",
   menuItems: [
     {
       id: 'projects',
@@ -13,16 +11,10 @@ export const portfolioData: PortfolioData = {
       content: []
     },
     {
-      id: 'skills',
-      label: 'skills',
+      id: 'stats',
+      label: 'stats',
       icon: '→',
-      content: [
-        "Frontend: React, TypeScript, Next.js, Tailwind CSS",
-        "Backend: C++, C#, Kotlin, Python, Node.js, PostgreSQL, MongoDB",
-        "Library & Frameworks: TensorFlow, Keras, Pandas, NumPy, PyTorch, OpenCV",
-        "Tools: Git, Docker, AWS, Vercel, Firebase, Supabase",
-        "Design: Figma, Blender"
-      ]
+      content:''
     },
     {
       id: 'notes',
