@@ -9,7 +9,8 @@ import { ProjectsWindow } from '../../components/ProjectsWindow';
 import { XPWindow } from '../../components/XPWindow';
 import '../../styles/globals.css';
 
-const Toolbar: React.FC<{ onMinesweeper: () => void }> = ({ onMinesweeper }) => (
+const Toolbar: React.FC<{ onMinesweeper: () => void }> = ({ //onMinesweeper
+  }) => (
   <div className="xp-toolbar">
     <a className="xp-toolbar-btn" href="mailto:andy@uwaterloo.ca">
       <span>✉</span> email
