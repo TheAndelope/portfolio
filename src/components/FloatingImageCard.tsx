@@ -2,23 +2,25 @@ import React from 'react';
 import { XPWindow } from './XPWindow';
 
 interface FloatingImageCardProps {
-  imageNumber: number;
-  label: string;
+  src: string;
+  title: string;
+  caption?: string;
   style: React.CSSProperties;
   onClose: () => void;
   onFocus?: () => void;
 }
 
 export const FloatingImageCard: React.FC<FloatingImageCardProps> = ({
-  imageNumber,
-  label,
+  src,
+  title,
+  caption,
   style,
   onClose,
   onFocus,
 }) => {
   return (
     <XPWindow
-      title={`Image ${imageNumber}`}
+      title={title}
       onClose={onClose}
       skipOpenAnimation
       resizable
@@ -29,13 +31,13 @@ export const FloatingImageCard: React.FC<FloatingImageCardProps> = ({
       onMouseDown={onFocus}
     >
       <img
-        src={`/images/${imageNumber}.jpg`}
-        alt={label}
+        src={src}
+        alt={title}
         style={{ width: '100%', height: 'auto', display: 'block' }}
       />
-      {label && (
+      {caption && (
         <div style={{ padding: '4px 8px', fontSize: '11px', fontFamily: 'Tahoma, Arial, sans-serif' }}>
-          {label}
+          {caption}
         </div>
       )}
     </XPWindow>

@@ -7,6 +7,12 @@
   font-family: Tahoma, 'MS Sans Serif', Arial, sans-serif;
 }
 
+.window-body, .window-body p, .window-body span, .window-body div {
+  font-family: 'Pixelated MS Sans Serif', Tahoma, Arial, sans-serif;
+  font-weight: 400;
+}
+
+
 /* ── Window colour + border overrides ────────────────────────────────────── */
 /*
   Strategy: replace the inset box-shadow border (which lives inside the element
@@ -46,6 +52,19 @@
   flex-direction: column !important;
 }
 .xp-resizable-active .window > .window-body {
+  flex: 1 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Projects window: always flex so scroll fills full height from open */
+.projects-window .window {
+  display: flex !important;
+  flex-direction: column !important;
+}
+.projects-window .window > .window-body {
   flex: 1 !important;
   min-height: 0 !important;
   overflow: hidden !important;
@@ -130,6 +149,12 @@
   min-width: 22px !important;
 }
 
+/* Ensure title bar controls sit above resize handle overlays */
+.title-bar-controls {
+  position: relative;
+  z-index: 10;
+}
+
 /* ── Title bar icon support ───────────────────────────────────────────────── */
 /* Add class "window-has-icon" + CSS var --title-icon to the wrapper div      */
 .window-has-icon .title-bar-text {
@@ -157,6 +182,9 @@
 @keyframes windowClose {
   from { opacity: 1; transform: scale(1);    }
   to   { opacity: 0; transform: scale(0.88); }
+}
+@keyframes xpSpin {
+  to { transform: rotate(360deg); }
 }
 
 /* ── Floating card animations ─────────────────────────────────────────────── */

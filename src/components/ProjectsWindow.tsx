@@ -9,6 +9,7 @@ interface ProjectsWindowProps {
   closeRequest?: number;
   onFocus?: () => void;
   zIndex?: number;
+  onProjectClick?: (project: Project) => void;
 }
 
 const RESIZE_HANDLES: { dir: string; style: React.CSSProperties }[] = [
@@ -22,9 +23,10 @@ const RESIZE_HANDLES: { dir: string; style: React.CSSProperties }[] = [
   { dir: 'nw', style: { top: -3, left: -3, width: 8, height: 8, cursor: 'nw-resize' } },
 ];
 
-const ProjectTile: React.FC<{ project: Project }> = ({ project }) => {
+const ProjectTile: React.FC<{ project: Project; onClick: () => void; onVideoLoad?: () => void }> = ({ project, onClick, onVideoLoad }) => {
   return (
     <div
+      onClick={onClick}
       style={{
         position: 'relative',
         background: '#000',
@@ -32,7 +34,7 @@ const ProjectTile: React.FC<{ project: Project }> = ({ project }) => {
         boxShadow: 'inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px grey, inset 2px 2px #dfdfdf',
         overflow: 'hidden',
         aspectRatio: '16 / 9',
-        cursor: 'default',
+        cursor: 'pointer',
       }}
     >
       {project.video ? (
@@ -42,6 +44,13 @@ const ProjectTile: React.FC<{ project: Project }> = ({ project }) => {
           muted
           loop
           playsInline
+          onCanPlayThrough={onVideoLoad}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+        />
+      ) : project.image ? (
+        <img
+          src={project.image}
+          alt={project.title}
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
         />
       ) : (
@@ -66,14 +75,14 @@ const ProjectTile: React.FC<{ project: Project }> = ({ project }) => {
           bottom: 0,
           left: 0,
           right: 0,
-          padding: '18px 7px 5px',
+          padding: '28px 9px 7px',
           background: 'linear-gradient(transparent, rgba(0,0,0,0.78))',
           pointerEvents: 'none',
         }}
       >
         <div
           style={{
-            fontSize: 12,
+            fontSize: 15,
             fontWeight: 700,
             color: '#fff',
             textShadow: '0 1px 3px rgba(0,0,0,0.9)',
@@ -84,12 +93,25 @@ const ProjectTile: React.FC<{ project: Project }> = ({ project }) => {
         >
           {project.title}
         </div>
+        <div
+          style={{
+            fontSize: 12,
+            color: 'rgba(255,255,255,0.6)',
+            marginTop: 2,
+            fontStyle: 'italic',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+        >
+          {project.tagline}
+        </div>
         {project.technologies && project.technologies.length > 0 && (
           <div
             style={{
-              fontSize: 10,
+              fontSize: 11,
               color: 'rgba(255,255,255,0.7)',
-              marginTop: 1,
+              marginTop: 2,
               whiteSpace: 'nowrap',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
@@ -126,9 +148,31 @@ const ProjectTile: React.FC<{ project: Project }> = ({ project }) => {
   );
 };
 
-export const ProjectsWindow: React.FC<ProjectsWindowProps> = ({ projects, onClose, closeRequest, onFocus, zIndex }) => {
+export const ProjectsWindow: React.FC<ProjectsWindowProps> = ({ projects, onClose, closeRequest, onFocus, zIndex, onProjectClick }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [isMaximized, setIsMaximized] = useState(false);
+
+  // Loading state: count how many videos have fired canPlayThrough
+  const totalVideos = projects.filter(p => p.video).length;
+  const [loadedCount, setLoadedCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(totalVideos > 0);
+  const loadedCountRef = useRef(0);
+
+  useEffect(() => {
+    if (totalVideos === 0) return;
+    // Timeout fallback: hide spinner after 5s regardless
+    const timeout = setTimeout(() => setIsLoading(false), 5000);
+    return () => clearTimeout(timeout);
+  }, [totalVideos]);
+
+  const handleVideoLoad = useCallback(() => {
+    loadedCountRef.current += 1;
+    setLoadedCount(loadedCountRef.current);
+    if (loadedCountRef.current >= totalVideos) {
+      setIsLoading(false);
+    }
+  }, [totalVideos]);
+
   const { bounds, isDragging, startResize } = useWindowBounds(
     wrapperRef as React.RefObject<HTMLElement | null>,
     !isMaximized,
@@ -169,7 +213,7 @@ export const ProjectsWindow: React.FC<ProjectsWindowProps> = ({ projects, onClos
     <div
       ref={wrapperRef}
       onMouseDownCapture={() => onFocus?.()}
-      className={[(bounds || isMaximized) ? 'xp-resizable-active' : '', 'window-has-icon'].join(' ').trim()}
+      className={[(bounds || isMaximized) ? 'xp-resizable-active' : '', 'window-has-icon', 'projects-window'].join(' ').trim()}
       style={{
         ...posStyle,
         zIndex: zIndex ?? 60,
@@ -188,15 +232,36 @@ export const ProjectsWindow: React.FC<ProjectsWindowProps> = ({ projects, onClos
       >
         <div
           className="project-tile-scroll"
-          style={
-            bounds
-              ? { flex: 1, minHeight: 0, overflowY: 'scroll', padding: 0, boxSizing: 'border-box' }
-              : { maxHeight: 'calc(100vh - 88px)', overflowY: 'scroll', padding: 0 }
-          }
+          style={{ flex: 1, minHeight: 0, overflowY: 'auto', boxSizing: 'border-box', position: 'relative' }}
         >
+          {isLoading && (
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'rgba(236,233,216,0.85)',
+                zIndex: 10,
+              }}
+            >
+              <div
+                style={{
+                  width: 32,
+                  height: 32,
+                  border: '4px solid #d0e4f8',
+                  borderTopColor: '#1e6dc0',
+                  borderRadius: '50%',
+                  animation: 'xpSpin 0.75s linear infinite',
+                }}
+              />
+            </div>
+          )}
           <div className="project-tile-grid">
             {projects.map((project, i) => (
-              <ProjectTile key={i} project={project} />
+              <ProjectTile key={i} project={project} onClick={() => onProjectClick?.(project)} onVideoLoad={handleVideoLoad} />
             ))}
           </div>
         </div>
@@ -214,6 +279,7 @@ export const ProjectsWindow: React.FC<ProjectsWindowProps> = ({ projects, onClos
           onMouseDown={e => startResize(e, dir)}
         />
       ))}
+
     </div>
   );
 };

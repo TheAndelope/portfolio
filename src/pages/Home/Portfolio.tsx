@@ -1,15 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Project } from '../../types';
 import { portfolioData } from '../../data/portfolio';
 import { projectsData } from '../../data/projects';
+import { imagesData, ImageMeta } from '../../data/images';
 import { ProfileCard } from '../../components/ProfileCard';
 import { FloatingImageCard } from '../../components/FloatingImageCard';
 import { MenuButton } from '../../components/MenuButton';
 import { ProjectsWindow } from '../../components/ProjectsWindow';
+import { ProjectModal } from '../../components/ProjectModal';
 import { XPWindow } from '../../components/XPWindow';
 import '../../styles/globals.css';
 
-const Toolbar: React.FC<{ onMinesweeper: () => void }> = ({ //onMinesweeper
+const Toolbar: React.FC<{ onMinesweeper: () => void; onShuffle: () => void }> = ({ onShuffle //onMinesweeper
   }) => (
   <div className="xp-toolbar">
     <a className="xp-toolbar-btn" href="mailto:hi@andyduong.dev">
@@ -17,20 +19,16 @@ const Toolbar: React.FC<{ onMinesweeper: () => void }> = ({ //onMinesweeper
     </a>
     <div className="xp-toolbar-sep" />
     <a className="xp-toolbar-btn" href="https://github.com/theandelope" target="_blank" rel="noopener noreferrer">
-      <span style={{ fontWeight: 700, fontSize: 11 }}>GH</span> github
+      <img src="/images/github.png" alt="GitHub" style={{ width: 14, height: 14, verticalAlign: 'middle' }} /> github
     </a>
     <div className="xp-toolbar-sep" />
     <a className="xp-toolbar-btn" href="https://www.linkedin.com/in/andy--duong/" target="_blank" rel="noopener noreferrer">
       <span style={{ fontWeight: 700, fontSize: 11, color: '#0a66c2' }}>in</span> linkedin
     </a>
     <div className="xp-toolbar-sep" />
-    {
-      /*
-    <button className="xp-toolbar-btn" onClick={onMinesweeper}>
-      <span></span> minesweeper
+    <button className="xp-toolbar-btn" onClick={onShuffle}>
+      <span>🔀</span> shuffle
     </button>
-    */
-    }
   </div>
 );
 
@@ -39,11 +37,43 @@ const Portfolio: React.FC = () => {
   const windowCountRef = useRef(0);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [projects] = useState<Project[]>(projectsData.projects);
-  const [randomImages, setRandomImages] = useState<number[]>([]);
+  const [randomImages, setRandomImages] = useState<ImageMeta[]>([]);
   const [visibleFloatingCards, setVisibleFloatingCards] = useState<number[]>([]);
   const [mainWindowVisible, setMainWindowVisible] = useState(true);
   const [projectsWindowOpen, setProjectsWindowOpen] = useState(false);
   const [projectsCloseReq, setProjectsCloseReq] = useState(0);
+  const [openProjects, setOpenProjects] = useState<Project[]>([]);
+
+  const openProject = (project: Project) => {
+    setOpenProjects(prev => {
+      const without = prev.filter(p => p.title !== project.title);
+      return [...without, project];
+    });
+    bringToFront(`project-${project.title}`);
+  };
+
+  const closeProject = (project: Project) => {
+    setOpenProjects(prev => prev.filter(p => p.title !== project.title));
+    setGlobalZOrder(prev => prev.filter(id => id !== `project-${project.title}`));
+    setProjectsWindowOpen(false);
+    setProjectsCloseReq(0);
+    setGlobalZOrder(prev => prev.filter(w => w !== 'projects'));
+  };
+
+  const focusProject = (project: Project) => {
+    setOpenProjects(prev => {
+      const without = prev.filter(p => p.title !== project.title);
+      return [...without, project];
+    });
+    bringToFront(`project-${project.title}`);
+  };
+
+  const closeProjectsWindow = useCallback(() => {
+    setProjectsWindowOpen(false);
+    setProjectsCloseReq(0);
+    setGlobalZOrder(prev => prev.filter(w => w !== 'projects'));
+  }, []);
+
   const [minesweeperOpen, setMinesweeperOpen] = useState(false);
 
   // Unified global z-order for all windows
@@ -109,11 +139,18 @@ const Portfolio: React.FC = () => {
   }, [globalZOrder, subWindows, projectsWindowOpen]);
 
   useEffect(() => {
-    const totalImages = 10;
-    const shuffled = Array.from({ length: totalImages }, (_, i) => i + 1).sort(() => Math.random() - 0.5);
-    setRandomImages(shuffled.slice(0, 5));
-    setVisibleFloatingCards([0, 1, 2, 3, 4]);
+    const shuffled = [...imagesData].sort(() => Math.random() - 0.5);
+    const picked = shuffled.slice(0, Math.min(5, shuffled.length));
+    setRandomImages(picked);
+    setVisibleFloatingCards(picked.map((_, i) => i));
   }, []);
+
+  const handleShuffle = () => {
+    const shuffled = [...imagesData].sort(() => Math.random() - 0.5);
+    const picked = shuffled.slice(0, Math.min(5, shuffled.length));
+    setRandomImages(picked);
+    setVisibleFloatingCards(picked.map((_, i) => i));
+  };
 
   const handleCloseFloatingCard = (index: number) => {
     setVisibleFloatingCards(prev => prev.filter(i => i !== index));
@@ -148,7 +185,13 @@ const Portfolio: React.FC = () => {
 
     return (
       <>
-        {body}
+        {menuId === 'cool things' ? (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            <a href="https://aaronye.dev/" target="_blank" rel="noopener noreferrer">
+              <img src="/aaron.gif" alt="Aaron Ye" style={{ display: 'block', imageRendering: 'pixelated' }} />
+            </a>
+          </div>
+        ) : body}
         {menuId === 'contact' && (
           <div style={{ marginTop: 16, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             <a href="/resume.pdf" target="_blank" rel="noopener noreferrer">
@@ -200,8 +243,9 @@ const Portfolio: React.FC = () => {
         visibleFloatingCards.includes(idx) ? (
           <FloatingImageCard
             key={idx}
-            imageNumber={randomImages[idx]}
-            label=""
+            src={randomImages[idx].src}
+            title={randomImages[idx].title}
+            caption={randomImages[idx].caption}
             onClose={() => handleCloseFloatingCard(idx)}
             onFocus={() => bringToFront(`floating-${idx}`)}
             style={{
@@ -230,7 +274,7 @@ const Portfolio: React.FC = () => {
           scrollable
           resizable
           icon="portfolio.ico"
-          toolbar={<Toolbar onMinesweeper={() => { setMinesweeperOpen(true); bringToFront('minesweeper'); }} />}
+          toolbar={<Toolbar onMinesweeper={() => { setMinesweeperOpen(true); bringToFront('minesweeper'); }} onShuffle={handleShuffle} />}
           className="main-window-wrapper"
           style={{
             width: 'clamp(360px, 55vw, 780px)',
@@ -329,18 +373,26 @@ const Portfolio: React.FC = () => {
         </XPWindow>
       )}
 
+      {/* Project detail modals — siblings of ProjectsWindow, not children */}
+      {openProjects.map((project) => (
+        <ProjectModal
+          key={project.title}
+          project={project}
+          onClose={() => closeProject(project)}
+          onFocus={() => focusProject(project)}
+          zIndex={1000 + openProjects.indexOf(project)}
+        />
+      ))}
+
       {/* Projects window */}
       {projectsWindowOpen && (
         <ProjectsWindow
           projects={projects}
-          onClose={() => {
-            setProjectsWindowOpen(false);
-            setProjectsCloseReq(0);
-            setGlobalZOrder(prev => prev.filter(w => w !== 'projects'));
-          }}
+          onClose={closeProjectsWindow}
           closeRequest={projectsCloseReq}
           onFocus={() => bringToFront('projects')}
           zIndex={getZ('projects')}
+          onProjectClick={openProject}
         />
       )}
     </div>

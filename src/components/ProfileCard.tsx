@@ -18,7 +18,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({ onFocus, zIndex }) => 
       onClose={() => setInstanceKey(k => k + 1)}
       icon="profile.ico"
       className="fixed profile-card"
-      style={{ top: 0, left: 0, zIndex: zIndex ?? 10, width: 'clamp(180px, 15vw, 240px)' }}
+      style={{ top: 0, left: 0, zIndex: zIndex ?? 10, width: 240 }}
       bodyStyle={{ padding: '8px 12px' }}
       onMouseDown={onFocus}
     >

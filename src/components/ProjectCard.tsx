@@ -26,7 +26,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) =>
             {project.title}
           </h3>
           <p style={{ margin: '0 0 8px', fontSize: 11, color: '#444', fontFamily: "'Pixelated MS Sans Serif', Arial", lineHeight: 1.5 }}>
-            {project.description}
+            {project.tagline}
           </p>
           {project.technologies && (
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>

@@ -2,7 +2,7 @@ import { PortfolioData } from '../types';
 
 export const portfolioData: PortfolioData = {
   name: "Andy Duong",
-  title: "up-and-coming machine learning & systems programmer",
+  title: "up-and-coming machine learning & systems developer",  
   menuItems: [
     {
       id: 'projects',
@@ -20,7 +20,7 @@ export const portfolioData: PortfolioData = {
       id: 'notes',
       label: 'notes',
       icon: '→',
-      content: ''
+      content: 'nothing yet...'
     },
     {
       id: 'cool things',
