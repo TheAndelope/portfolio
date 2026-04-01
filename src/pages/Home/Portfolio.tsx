@@ -43,6 +43,7 @@ const Portfolio: React.FC = () => {
   const [projectsWindowOpen, setProjectsWindowOpen] = useState(false);
   const [projectsCloseReq, setProjectsCloseReq] = useState(0);
   const [openProjects, setOpenProjects] = useState<Project[]>([]);
+  const [projectCloseReqs, setProjectCloseReqs] = useState<Record<string, number>>({});
 
   const openProject = (project: Project) => {
     setOpenProjects(prev => {
@@ -50,14 +51,12 @@ const Portfolio: React.FC = () => {
       return [...without, project];
     });
     bringToFront(`project-${project.title}`);
+    setProjectCloseReqs(prev => ({ ...prev, [project.title]: 0 }));
   };
 
   const closeProject = (project: Project) => {
     setOpenProjects(prev => prev.filter(p => p.title !== project.title));
     setGlobalZOrder(prev => prev.filter(id => id !== `project-${project.title}`));
-    setProjectsWindowOpen(false);
-    setProjectsCloseReq(0);
-    setGlobalZOrder(prev => prev.filter(w => w !== 'projects'));
   };
 
   const focusProject = (project: Project) => {
@@ -108,35 +107,38 @@ const Portfolio: React.FC = () => {
     setGlobalZOrder(prev => prev.filter(w => w !== id));
   };
 
-  const handleCloseActiveWindow = () => {
+  const requestCloseProject = (project: Project) => {
+    setProjectCloseReqs(prev => ({ ...prev, [project.title]: (prev[project.title] ?? 0) + 1 }));
+  };
+
+  // Find and close the topmost window using globalZOrder as source of truth
+  const closeTopmostWindow = (includingMain = false) => {
     const isMobile = window.innerWidth <= 768;
-    if (projectsWindowOpen) {
-      setProjectsCloseReq(r => r + 1);
-    } else if (subWindows.length > 0) {
-      // Close the topmost sub-window based on globalZOrder
-      const subIds = subWindows.map(w => w.id);
-      const topmost = [...globalZOrder].reverse().find(id => subIds.includes(id));
-      if (topmost) closeSubWindow(topmost);
-    } else if (!isMobile) {
-      setMainWindowVisible(false);
+    for (let i = globalZOrder.length - 1; i >= 0; i--) {
+      const id = globalZOrder[i];
+      if (id.startsWith('project-')) {
+        const title = id.slice('project-'.length);
+        const project = openProjects.find(p => p.title === title);
+        if (project) { requestCloseProject(project); return; }
+      } else if (id === 'projects' && projectsWindowOpen) {
+        setProjectsCloseReq(r => r + 1); return;
+      } else if (subWindows.some(w => w.id === id)) {
+        closeSubWindow(id); return;
+      } else if (id === 'main' && includingMain && !isMobile) {
+        setMainWindowVisible(false); return;
+      }
     }
   };
 
+  const handleCloseActiveWindow = () => closeTopmostWindow(true);
+
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'x' || e.key === 'X') {
-        if (projectsWindowOpen) {
-          setProjectsCloseReq(r => r + 1);
-        } else if (subWindows.length > 0) {
-          const subIds = subWindows.map(w => w.id);
-          const topmost = [...globalZOrder].reverse().find(id => subIds.includes(id));
-          if (topmost) closeSubWindow(topmost);
-        }
-      }
+      if (e.key === 'x' || e.key === 'X') closeTopmostWindow(false);
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [globalZOrder, subWindows, projectsWindowOpen]);
+  }, [globalZOrder, subWindows, projectsWindowOpen, openProjects]);
 
   useEffect(() => {
     const shuffled = [...imagesData].sort(() => Math.random() - 0.5);
@@ -380,7 +382,8 @@ const Portfolio: React.FC = () => {
           project={project}
           onClose={() => closeProject(project)}
           onFocus={() => focusProject(project)}
-          zIndex={1000 + openProjects.indexOf(project)}
+          zIndex={getZ(`project-${project.title}`)}
+          closeRequest={projectCloseReqs[project.title] ?? 0}
         />
       ))}
 

@@ -24,8 +24,28 @@ const RESIZE_HANDLES: { dir: string; style: React.CSSProperties }[] = [
 ];
 
 const ProjectTile: React.FC<{ project: Project; onClick: () => void; onVideoLoad?: () => void }> = ({ project, onClick, onVideoLoad }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!project.video || !wrapperRef.current) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      const video = videoRef.current;
+      if (!video) return;
+      if (entry.isIntersecting) {
+        if (!video.src) video.src = project.video!;
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    }, { threshold: 0.1 });
+    observer.observe(wrapperRef.current);
+    return () => observer.disconnect();
+  }, [project.video]);
+
   return (
     <div
+      ref={wrapperRef}
       onClick={onClick}
       style={{
         position: 'relative',
@@ -39,8 +59,8 @@ const ProjectTile: React.FC<{ project: Project; onClick: () => void; onVideoLoad
     >
       {project.video ? (
         <video
-          src={project.video}
-          autoPlay
+          ref={videoRef}
+          preload="none"
           muted
           loop
           playsInline

@@ -9,6 +9,7 @@ interface ProjectModalProps {
   onClose: () => void;
   zIndex?: number;
   onFocus?: () => void;
+  closeRequest?: number;
 }
 
 const RESIZE_HANDLES: { dir: string; style: React.CSSProperties }[] = [
@@ -22,7 +23,7 @@ const RESIZE_HANDLES: { dir: string; style: React.CSSProperties }[] = [
   { dir: 'nw', style: { top: -3, left: -3, width: 8, height: 8, cursor: 'nw-resize' } },
 ];
 
-export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose, zIndex, onFocus }) => {
+export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose, zIndex, onFocus, closeRequest }) => {
   // Mirror XPWindow: useDraggable disabled (no-match), useWindowBounds handles drag+resize
   const [wrapperRef] = useDraggable<HTMLDivElement>({ handleSelector: '__no_match__' });
 
@@ -46,6 +47,11 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose, zI
     setIsClosing(true);
     setTimeout(() => onClose(), 170);
   }, [onClose]);
+
+  // External close trigger (keyboard X, etc.) — same pattern as ProjectsWindow
+  useEffect(() => {
+    if (closeRequest) handleClose();
+  }, [closeRequest, handleClose]);
 
   const activeResizable = !!bounds;
   const wrapperClassName = activeResizable ? 'xp-resizable-active' : '';
