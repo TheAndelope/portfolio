@@ -154,7 +154,7 @@ export const ProjectsWindow: React.FC<ProjectsWindowProps> = ({ projects, onClos
 
   // Loading state: count how many videos have fired canPlayThrough
   const totalVideos = projects.filter(p => p.video).length;
-  const [loadedCount, setLoadedCount] = useState(0);
+  const [, setLoadedCount] = useState(0);
   const [isLoading, setIsLoading] = useState(totalVideos > 0);
   const loadedCountRef = useRef(0);
 
